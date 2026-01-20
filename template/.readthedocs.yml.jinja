@@ -4,20 +4,21 @@
 version: 2
 
 build:
-  os: ubuntu-22.04
+  os: ubuntu-24.04
   tools:
-    python: "{{ python_version }}"
+    python: "3.13"
   jobs:
-    post_install:
-      - uv sync --group docs
+    pre_create_environment:
+      # Install uv via asdf (or system package) before creating the venv
+      - asdf plugin add uv || true
+      - asdf install uv latest
+      - asdf global uv latest
+    create_environment:
+      # Create the virtual environment using uv
+      - uv venv "${READTHEDOCS_VIRTUALENV_PATH}"
+    install:
+      # Sync doc-dependencies (the group “docs”), then install the project itself
+      - UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}" uv sync --group docs
 
 mkdocs:
   configuration: mkdocs.yml
-  fail_on_warning: false
-
-python:
-  install:
-    - method: pip
-      path: .
-      extra_requirements:
-        - docs
