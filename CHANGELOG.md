@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Automated release notes generation with git-cliff
+- Conventional commit enforcement with commitizen
+- Automatic CHANGELOG.md updates on release
+- GitHub Release creation with generated notes
+
 ### Removed
 - Removed non-functional `include_docker` prompt that had no implementation
 
@@ -27,18 +33,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multiple license options (MIT, Apache-2.0, BSD-3-Clause, GPL-3.0, Proprietary)
 - Example code and tests
 - Full documentation structure
-
-### Changed
-- N/A
-
-### Deprecated
-- N/A
-
-### Removed
-- N/A
-
-### Fixed
-- N/A
-
-### Security
-- N/A
