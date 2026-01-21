@@ -1,4 +1,4 @@
-name: Build and release template
+name: Create changelog PR
 
 on:
   push:
