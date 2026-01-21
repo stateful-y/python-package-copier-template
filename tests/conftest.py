@@ -35,7 +35,7 @@ class CopierTestFixture:
         if extra_answers:
             answers.update(extra_answers)
 
-        # Run copier - use HEAD to get latest changes even if not tagged
+        # Run copier - use HEAD to get latest changes
         result = run_copy(
             str(self.template_dir),
             str(project_dir),

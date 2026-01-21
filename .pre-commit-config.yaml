@@ -11,6 +11,13 @@ repos:
       - id: check-merge-conflict
       - id: mixed-line-ending
 
+  # Enforce conventional commit messages
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.3.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.9.9
     hooks:

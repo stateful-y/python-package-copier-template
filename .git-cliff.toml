@@ -1,4 +1,4 @@
-{% if include_github_actions %}# git-cliff configuration for changelog generation
+# git-cliff configuration for changelog generation
 # See: https://git-cliff.org/docs/configuration
 
 [changelog]
@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 """
 # template for the changelog body
 body = """
-{% raw %}{% if version %}\
+{% if version %}\
     ## [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
 {% else %}\
     ## [Unreleased]
@@ -25,7 +25,7 @@ body = """
         - {% if commit.scope %}**{{ commit.scope }}:** {% endif %}{{ commit.message | upper_first }}\
     {% endfor %}
 {% endfor %}\n
-{% endraw %}"""
+"""
 # template for the changelog footer
 footer = ""
 # remove the leading and trailing whitespace from the templates
@@ -72,4 +72,3 @@ topo_order = false
 sort_commits = "oldest"
 # limit the number of commits included in the changelog.
 # limit_commits = 42
-{% endif %}
