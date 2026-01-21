@@ -69,7 +69,14 @@ git add .
 git commit -m "feat: add my feature"
 ```
 
-We follow [Conventional Commits](https://www.conventionalcommits.org/) for commit messages.
+We follow [Conventional Commits](https://www.conventionalcommits.org/) for commit messages. The commit message format is enforced by commitizen pre-commit hooks, which will validate your commit messages automatically.
+
+**Valid commit message examples:**
+- `feat: add new feature`
+- `fix: resolve bug in calculation`
+- `docs: update installation guide`
+- `chore: update dependencies`
+- `test: add tests for new feature`
 
 ### Running Tests
 
@@ -167,24 +174,67 @@ git push origin feature/my-feature
 
 ## Commit Message Convention
 
-We use [Conventional Commits](https://www.conventionalcommits.org/):
+We use [Conventional Commits](https://www.conventionalcommits.org/) enforced by commitizen:
 
-- `feat:` - New features
-- `fix:` - Bug fixes
+- `feat:` - New features (triggers minor version bump)
+- `fix:` - Bug fixes (triggers patch version bump)
 - `docs:` - Documentation changes
 - `style:` - Code style changes (formatting, etc.)
 - `refactor:` - Code refactoring
 - `test:` - Adding or updating tests
 - `chore:` - Maintenance tasks
+- `perf:` - Performance improvements
+- `ci:` - CI/CD changes
+
+**Breaking changes:** Add `!` after the type or add `BREAKING CHANGE:` in the footer to trigger a major version bump.
+
+**Example with scope:**
+```bash
+git commit -m "feat(api): add new endpoint for user data"
+```
+
+**Example with breaking change:**
+```bash
+git commit -m "feat!: redesign authentication system
+
+BREAKING CHANGE: authentication now requires API keys instead of passwords"
+```
+
+The pre-commit hook will validate your commit messages and prevent commits that don't follow the convention.
 
 ## Release Process
 
-Releases are automated through GitHub Actions when a new tag is pushed:
+Releases are fully automated through GitHub Actions when a new tag is pushed.
 
-```bash
-git tag v0.2.0
-git push origin v0.2.0
-```
+### How It Works
+
+1. **Tag a release:**
+   ```bash
+   git tag v0.2.0
+   git push origin v0.2.0
+   ```
+
+2. **Automated workflow:**
+   - Generates changelog from conventional commits using git-cliff
+   - Updates CHANGELOG.md in the repository
+   - Builds and publishes package to PyPI
+   - Creates GitHub Release with generated release notes
+   - Attaches distribution files to the release
+
+3. **Release notes generation:**
+   - All commits since the last tag are analyzed
+   - Commits are grouped by type (Added, Fixed, Documentation, etc.)
+   - Only commits following conventional format are included
+   - Breaking changes are highlighted
+
+### Version Numbering
+
+This project uses [Semantic Versioning](https://semver.org/):
+- **Major** (1.0.0): Breaking changes
+- **Minor** (0.1.0): New features (backward compatible)
+- **Patch** (0.0.1): Bug fixes (backward compatible)
+
+Use conventional commits to communicate the type of change, and select the appropriate version number when tagging.
 
 ## Questions?
 

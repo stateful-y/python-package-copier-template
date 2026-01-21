@@ -140,6 +140,16 @@ include_namespace_packages = true
 
 [tool.coverage.html]
 show_contexts = true
+{% if include_github_actions %}
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version_scheme = "semver"
+version_provider = "scm"
+update_changelog_on_bump = false
+major_version_zero = true
+tag_format = "v$version"
+{% endif %}
 
 [tool.ty]
 python_version = "{{ python_version }}"

@@ -32,6 +32,9 @@ def test_template_creates_project(copie):
     for path in expected_dirs:
         assert (result.project_dir / path).is_dir(), f"Missing directory: {path}"
 
+    # git-cliff config should be included with GitHub Actions
+    assert (result.project_dir / ".git-cliff.toml").is_file()
+
 
 def test_readthedocs_config_included(copie):
     """Test that ReadTheDocs config is always included."""
@@ -132,6 +135,9 @@ def test_precommit_configuration(copie):
     # Check for ty
     assert "ty" in content, "ty not found in pre-commit config"
 
+    # Check for commitizen
+    assert "commitizen" in content, "commitizen not found in pre-commit config"
+
 
 def test_github_workflows(copie):
     """Test that GitHub workflows are properly configured."""
@@ -147,6 +153,55 @@ def test_github_workflows(copie):
 
     # Check for ty
     assert "ty" in content, "ty not found in tests workflow"
+
+
+def test_release_workflow(copie):
+    """Test that release workflow includes changelog automation."""
+    result = copie.copy()
+
+    release_workflow = result.project_dir / ".github" / "workflows" / "release.yml"
+    assert release_workflow.is_file()
+
+    content = release_workflow.read_text()
+
+    # Check for git-cliff
+    assert "git-cliff" in content, "git-cliff not found in release workflow"
+
+    # Check for changelog job
+    assert "changelog" in content.lower(), "changelog job not found in release workflow"
+
+    # Check for GitHub release creation
+    assert "gh release create" in content or "github-release" in content.lower(), "GitHub release creation not found"
+
+
+def test_commitizen_configuration(copie):
+    """Test that commitizen is properly configured."""
+    result = copie.copy()
+
+    pyproject_path = result.project_dir / "pyproject.toml"
+    assert pyproject_path.is_file()
+
+    content = pyproject_path.read_text()
+
+    # Check for commitizen configuration
+    assert "[tool.commitizen]" in content, "commitizen config not found in pyproject.toml"
+    assert "cz_conventional_commits" in content, "conventional commits not configured"
+
+
+def test_git_cliff_configuration(copie):
+    """Test that git-cliff configuration exists."""
+    result = copie.copy()
+
+    cliff_config = result.project_dir / ".git-cliff.toml"
+    assert cliff_config.is_file()
+
+    content = cliff_config.read_text()
+
+    # Check for conventional commits
+    assert "conventional_commits" in content, "conventional commits not enabled in git-cliff"
+
+    # Check for Keep a Changelog format
+    assert "Keep a Changelog" in content, "Keep a Changelog format not mentioned"
 
 
 def test_different_licenses(copie):
