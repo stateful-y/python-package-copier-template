@@ -37,16 +37,24 @@ jobs:
 
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Install git-cliff
-        uses: taiki-e/install-action@v2
-        with:
-          tool: git-cliff
-
-      - name: Generate release notes
+      - name: Extract release notes from CHANGELOG
         id: release_notes
         run: |
           VERSION="{% raw %}${{ steps.find_tag.outputs.version }}{% endraw %}"
-          RELEASE_NOTES=$(git-cliff --config .git-cliff.toml --tag "$VERSION" --unreleased --strip header)
+
+          # Extract the section for this version from CHANGELOG.md
+          # This uses awk to get content between the version header and the next version header
+          RELEASE_NOTES=$(awk -v ver="$VERSION" '
+            /^## \[.*\]/ {
+              if (found) exit;
+              if ($0 ~ "\\[" ver "\\]") {
+                found=1;
+                next;
+              }
+            }
+            found {print}
+          ' CHANGELOG.md | sed '/^$/d' | head -c 50000)
+
           echo "notes<<EOF" >> $GITHUB_OUTPUT
           echo "$RELEASE_NOTES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
