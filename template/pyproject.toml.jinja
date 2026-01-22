@@ -53,6 +53,7 @@ fix = [
 examples = [
 {% if include_examples %}
     "marimo>=0.19.0",
+    "numpy>=2.4.0", # required by plotly
     "plotly>=6.5.0",
 {% endif %}]
 
@@ -71,6 +72,7 @@ packages = ["src/{{ package_name }}"]
 
 [tool.hatch.version]
 source = "vcs"
+fallback-version = "0.0.0"
 
 [tool.hatch.build.hooks.vcs]
 version-file = "src/{{ package_name }}/_version.py"
