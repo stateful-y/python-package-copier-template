@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.3.0] - 2026-01-22
+
+This **minor release** includes 4 commits.
+
+
+### Bug Fixes
+- Extract release notes from merged CHANGELOG.md instead of regenerating  ([#25](https://github.com/gtauzin/python-package-copier-template/pull/25)) by @gtauzin
+- Update lint command to check types correctly  ([#27](https://github.com/gtauzin/python-package-copier-template/pull/27)) by @gtauzin
+
+### Documentation
+- Document automated release workflow with git-cliff and changelog PR  ([#30](https://github.com/gtauzin/python-package-copier-template/pull/30)) by @gtauzin
+
+### Miscellaneous Tasks
+- Update CHANGELOG.md for v0.2.0  ([#24](https://github.com/gtauzin/python-package-copier-template/pull/24)) by @gtauzin
+
+### Contributors
+
+Thanks to all contributors for this release:
+- @gtauzin
+
 ## [0.2.0] - 2026-01-21
 
 This **minor release** includes 13 commits.
