@@ -4,7 +4,10 @@
 
 This is a **Copier template project** that generates modern Python packages. You're working on the *template itself*, not a generated project. The `template/` directory contains Jinja2 templates (`.jinja` files) that copier renders when creating new Python packages.
 
-**Key distinction**: Changes to root files (`noxfile.py`, `pyproject.toml`) affect this template repository. Changes to `template/*.jinja` files affect generated projects.
+**Key distinction**:
+- Changes to root files (`noxfile.py`, `pyproject.toml`) affect this template repository
+- Changes to `template/*.jinja` files affect generated projects
+- Root `pyproject.toml` only needs test/docs dependencies; generated projects in `template/pyproject.toml.jinja` define the full Python package setup
 
 ## Template Architecture
 
@@ -38,7 +41,24 @@ uv run pytest -v
 uvx nox -s tests
 ```
 
-The test suite uses copier to generate actual projects in temp directories and validates the output. See `tests/test_template.py`.
+The test suite uses copier's `run_copy()` to generate actual projects in temp directories (`tmp_path`), then validates:
+- File/directory structure matches expectations
+- Generated content includes required tools and configurations
+- Multiple license options generate correctly
+- GitHub workflows are properly templated with uv and ty
+
+**Important**: `CopierTestFixture` (in [tests/conftest.py](tests/conftest.py)) provides default answers for all prompts. Tests use `result.project_dir` to access the generated temporary project. Assertions should verify *generated* project content, not template source files.
+
+**Common test pattern**:
+```python
+def test_feature(copie):
+    result = copie.copy(extra_answers={"license": "MIT"})
+    assert (result.project_dir / "LICENSE").is_file()
+    content = (result.project_dir / "pyproject.toml").read_text()
+    assert "expected_string" in content
+```
+
+See [tests/test_template.py](tests/test_template.py) for assertion patterns.
 
 ### Code Quality
 ```bash
@@ -70,8 +90,10 @@ Generated projects use this opinionated modern Python stack:
 - **hatchling + hatch-vcs**: Build backend with VCS-based versioning
 - **ruff**: Combined linter + formatter (replaces black, isort, flake8)
 - **ty**: Type checker (not mypy/pyright)
-- **nox**: Task runner with uv backend
+- **nox**: Task runner with uv backend (installed globally via `uvx nox`, NOT a project dependency)
 - **pytest**: Testing with coverage via `covdefaults`
+
+**Critical**: nox is NOT listed in `template/pyproject.toml.jinja` dependencies. It's installed system-wide with `uv tool install nox` or invoked via `uvx nox`. Generated projects' GitHub workflows use `uv tool install nox` for CI. Do not add nox to dependency groups when testing if it appears in generated projects.
 
 ### Nox Sessions
 Both template and generated projects use nox with `uv` backend:
@@ -125,10 +147,21 @@ When adding files to generated projects:
 
 ### GitHub Actions
 Generated projects include workflows (if `include_github_actions: true`):
-- `tests.yml`: Run nox tests on push/PR
-- `release.yml`: Publish to PyPI on tag push
-- `nightly.yml`: Scheduled dependency testing
+- `tests.yml`: Run nox tests on push/PR with matrix strategy across Python versions
+- `publish-release.yml`: Build and publish to PyPI, create GitHub release on tag push
+- `changelog.yml`: Automated changelog generation with git-cliff on version tags
+- `nightly.yml`: Scheduled dependency testing against latest package versions
 - `dependabot.yml`: Automated dependency updates
+
+### Changelog & Versioning
+Generated projects use automated changelog and version management:
+- **git-cliff**: Generates changelogs from conventional commits (config in `.git-cliff.toml.jinja`)
+- **commitizen**: Enforces conventional commit messages via pre-commit hook
+- **hatch-vcs**: VCS-based versioning (reads from git tags, writes to `_version.py`)
+- Changelog format follows "Keep a Changelog" style
+- On tag push, `changelog.yml` workflow auto-generates CHANGELOG.md
+
+Example commit format: `feat: add new feature` or `fix: resolve bug`
 
 ### ReadTheDocs
 - Always included via `.readthedocs.yml.jinja`
