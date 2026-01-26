@@ -74,6 +74,10 @@ plugins:
             show_symbol_type_heading: true
             show_symbol_type_toc: true
             members_order: source
+{% if include_examples %}  - marimo:
+      enabled: true
+      notebook_dir: examples
+{% endif %}
 
 nav:
   - Home: index.md

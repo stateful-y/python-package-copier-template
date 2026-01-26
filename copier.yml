@@ -55,6 +55,11 @@ author_email:
   type: str
   help: "Author or maintainer email"
 
+github_username:
+  type: str
+  help: "GitHub username or organization"
+  default: ""
+
 license:
   type: str
   help: "Project license"
@@ -69,17 +74,12 @@ license:
 python_version:
   type: str
   help: "Minimum Python version"
-  default: "3.10"
+  default: "3.11"
   choices:
-    - "3.10"
     - "3.11"
     - "3.12"
     - "3.13"
-
-github_username:
-  type: str
-  help: "GitHub username or organization"
-  default: ""
+    - "3.14"
 
 include_github_actions:
   type: bool
