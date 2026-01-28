@@ -33,7 +33,7 @@ This **{{ release_type }} release** includes {{ commits | length }} commit{%- if
 
 ### {{ group | striptags | trim | upper_first }}
 {%- for commit in commits %}
-- {{ commit.message | upper_first }}{%- if commit.github.pr_number %} ([#{{ commit.github.pr_number }}](https://github.com/gtauzin/python-package-copier-template/pull/{{ commit.github.pr_number }})){%- endif %}{%- if commit.github.username %} by @{{ commit.github.username }}{%- endif %}
+- {{ commit.message | upper_first }}{%- if commit.github.pr_number %} ([#{{ commit.github.pr_number }}](https://github.com/stateful-y/python-package-copier-template/pull/{{ commit.github.pr_number }})){%- endif %}{%- if commit.github.username %} by @{{ commit.github.username }}{%- endif %}
 {%- endfor %}
 {%- endfor %}
 {%- set new_contributors = commits | filter(attribute="github.username") | map(attribute="github.username") | unique %}
@@ -98,5 +98,5 @@ sort_commits = "oldest"
 # limit_commits = 42
 
 [remote.github]
-owner = "gtauzin"
+owner = "stateful-y"
 repo = "python-package-copier-template"

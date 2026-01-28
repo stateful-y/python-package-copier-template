@@ -1,7 +1,7 @@
 site_name: Python Package Copier Template
 site_description: A modern Python package template based on copier using uv, ruff, ty, pytest, mkdocs, and nox
 site_author: GitHub Contributors
-repo_url: https://github.com/gtauzin/python-package-copier-template
+repo_url: https://github.com/stateful-y/python-package-copier-template
 edit_uri: edit/main/docs/
 
 theme:

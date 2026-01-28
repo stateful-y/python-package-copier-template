@@ -4,7 +4,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/gtauzin/python-package-copier-template.git
+git clone https://github.com/stateful-y/python-package-copier-template.git
 cd python-package-copier-template
 
 # Install dependencies

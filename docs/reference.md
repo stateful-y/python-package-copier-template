@@ -180,7 +180,7 @@ Run this from your project's root directory.
 ### What Gets Updated
 
 Copier will:
-1. Pull the latest template changes from `gh:gtauzin/python-package-copier-template`
+1. Pull the latest template changes from `gh:stateful-y/python-package-copier-template`
 2. Show you a diff of changes
 3. Prompt for any new configuration questions
 4. Apply updates while preserving your modifications

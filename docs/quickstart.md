@@ -13,10 +13,10 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 ## Create Your Package
 
 ```bash
-uvx copier copy gh:gtauzin/python-package-copier-template my-package
+uvx copier copy gh:stateful-y/python-package-copier-template my-package
 ```
 
-Answer the prompts about your project (name, author, license, etc.). See [copier.yml](https://github.com/gtauzin/python-package-copier-template/blob/main/copier.yml) for all options.
+Answer the prompts about your project (name, author, license, etc.). See [copier.yml](https://github.com/stateful-y/python-package-copier-template/blob/main/copier.yml) for all options.
 
 ## Initialize Your Project
 
@@ -95,4 +95,4 @@ Documentation builds automatically on every push to main.
 
 - **[Reference Guide](reference.md)** - Full command reference, CI/CD setup, testing guide
 - **[Contributing](contributing.md)** - For template developers
-- **[GitHub Template](https://github.com/gtauzin/python-package-copier-template)** - Source code and issues
+- **[GitHub Template](https://github.com/stateful-y/python-package-copier-template)** - Source code and issues
