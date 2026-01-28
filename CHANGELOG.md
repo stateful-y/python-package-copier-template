@@ -13,11 +13,14 @@ This **minor release** includes 4 commits.
 
 ### Features
 - Add docstring testing support and restructure documentation  ([#37](https://github.com/gtauzin/python-package-copier-template/pull/37)) by @gtauzin
-- Add optional marimo notebook examples and rename include_github_actions and python_version  ([#38](https://github.com/gtauzin/python-package-copier-template/pull/38)) by @gtauzin
+- Add optional marimo notebook examples  ([#38](https://github.com/gtauzin/python-package-copier-template/pull/38)) by @gtauzin
 
 ### Bug Fixes
 - Improve release notes extraction from CHANGELOG.md  ([#35](https://github.com/gtauzin/python-package-copier-template/pull/35)) by @gtauzin
 - Correct copier source path and add update documentation  ([#36](https://github.com/gtauzin/python-package-copier-template/pull/36)) by @gtauzin
+
+### Refactoring
+- Rename `include_github_actions` into `include_actions` and `python_version` into `min_python_version`  ([#38](https://github.com/gtauzin/python-package-copier-template/pull/38)) by @gtauzin
 
 ### Contributors
 
