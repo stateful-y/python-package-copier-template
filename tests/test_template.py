@@ -433,7 +433,7 @@ def test_github_actions_when_enabled(copie):
 
     # Check for GitHub configuration files
     assert (github_dir / "dependabot.yml").is_file(), "dependabot.yml not created"
-    assert (github_dir / "pull_request_template.md").is_file(), "PR template not created"
+    assert (github_dir / "PULL_REQUEST_TEMPLATE.md").is_file(), "PR template not created"
 
     # Check ISSUE_TEMPLATE directory
     issue_template_dir = github_dir / "ISSUE_TEMPLATE"
