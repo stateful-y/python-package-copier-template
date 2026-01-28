@@ -5,26 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
-## [0.4.0] - 2026-01-28
-
-This **minor release** includes 5 commits.
-
-
-### Features
-- Add docstring testing support and restructure documentation  ([#37](https://github.com/gtauzin/python-package-copier-template/pull/37)) by @gtauzin
-- Add optional marimo notebook examples and rename include_github_actions and python_version  ([#38](https://github.com/gtauzin/python-package-copier-template/pull/38)) by @gtauzin
-
-### Bug Fixes
-- Improve release notes extraction from CHANGELOG.md  ([#35](https://github.com/gtauzin/python-package-copier-template/pull/35)) by @gtauzin
-- Correct copier source path and add update documentation  ([#36](https://github.com/gtauzin/python-package-copier-template/pull/36)) by @gtauzin
-- Allow release action to recognize version without v in changelog by @gtauzin
-
-### Contributors
-
-Thanks to all contributors for this release:
-- @gtauzin
-
 ## [0.4.0] - 2026-01-28
 
 This **minor release** includes 4 commits.
