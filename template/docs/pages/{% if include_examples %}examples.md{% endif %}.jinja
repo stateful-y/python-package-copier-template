@@ -1,24 +1,53 @@
 {% if include_examples %}# Examples
 
-This directory contains interactive [marimo](https://marimo.io) notebooks demonstrating AA features.
+Explore real-world applications of {{ project_name }} through interactive examples.
 
-## What is marimo?
+## What can {{ project_name }} do?
 
-marimo is a reactive Python notebook that's:
+### Example 1: [Use Case Title]
 
-- **Reactive**: Run a cell and marimo automatically runs dependent cells
+[2-3 sentence description of what this example demonstrates and why it's useful. Focus on the problem being solved and the value delivered, not the technical implementation.]
 
-- **Interactive**: Built-in UI elements like sliders, dropdowns, and plots
+<!-- Add a screenshot showing the example output -->
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: light)" srcset="../../assets/example1_light.png">
+    <source media="(prefers-color-scheme: dark)" srcset="../../assets/example1_dark.png">
+    <img src="../../assets/example1_light.png" alt="Example 1 output" width="600">
+  </picture>
+</p>
 
-- **Git-friendly**: Stored as pure `.py` files
+[Brief paragraph explaining the approach or technique demonstrated in this example.]
 
-- **Executable**: Run as scripts or deploy as web apps
+### Example 2: [Use Case Title]
+
+[Description focusing on the business problem or user need this example addresses. Explain what capabilities are shown and why they matter.]
+
+<!-- Add screenshot placeholder -->
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: light)" srcset="../../assets/example2_light.png">
+    <source media="(prefers-color-scheme: dark)" srcset="../../assets/example2_dark.png">
+    <img src="../../assets/example2_light.png" alt="Example 2 output" width="600">
+  </picture>
+</p>
+
+### Example 3: [Use Case Title]
+
+[Description focusing on advanced features or more complex scenarios. Show how {{ project_name }} handles real-world complexity.]
+
+<!-- Add screenshot placeholder -->
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: light)" srcset="../../assets/example3_light.png">
+    <source media="(prefers-color-scheme: dark)" srcset="../../assets/example3_dark.png">
+    <img src="../../assets/example3_light.png" alt="Example 3 output" width="600">
+  </picture>
+</p>
 
 ## Interactive Demo
 
-### Embedded Notebook
-
-Below is an embedded marimo notebook that you can interact with directly in the documentation:
+Try the interactive notebook below - you can modify and run the code directly in your browser:
 
 /// marimo-embed-file
     filepath: ../../examples/hello.py
@@ -27,281 +56,22 @@ Below is an embedded marimo notebook that you can interact with directly in the 
     show_source: true
 ///
 
+## Standalone Notebooks
 
-## Approach 1: Inline Code with marimo Islands
+For a full-page interactive experience, open the [standalone notebook](../../examples/hello.html) which runs entirely in your browser using WebAssembly (no server needed).
 
-This is the simplest way to add interactive Python code to your documentation. Code is written directly in your Markdown files and executed in place.
-
-### Basic Example
-
-````markdown
-```python {marimo}
-2 + 2
-```
-````
-
-By default, marimo executes the code and displays the result. On page load, marimo re-hydrates the cell state and executes the code again using WebAssembly.
-
-### Interactive Elements
-
-````markdown
-```python {marimo}
-import marimo as mo
-name = mo.ui.text(placeholder="Enter your name", debounce=False)
-name
-```
-
-```python {marimo}
-mo.md(f"Hello, **{name.value or '__'}**!")
-```
-````
-
-This produces:
-
-```python {marimo}
-import marimo as mo
-name = mo.ui.text(placeholder="Enter your name", debounce=False)
-name
-```
-
-```python {marimo}
-mo.md(f"Hello, **{name.value or '__'}**!")
-```
-
-## Approach 2: Embedding the marimo Playground
-
-For more complex notebooks or when you want to provide a full notebook experience, you can embed the marimo playground. This approach requires the `pymdown-extensions` package. This approach is ideal when you want to:
-
-- Show complete, multi-cell notebooks
-- Allow users to edit and experiment with the code
-- Embed existing .py notebooks
-
-If you're looking for simpler, inline code examples, check out the [Quick Start](quick-start.md) guide's section on inline code.
-
-This feature uses `pymdownx.blocks` to embed marimo notebooks in your MkDocs documentation, creating iframes that render the marimo playground.
-
-## Setup
-
-To use the marimo playground, you need to install the `pymdown-extensions` package.
+## Running Examples Locally
 
 ```bash
-pip install mkdocs-marimo pymdown-extensions
-```
-
-## Basic Example
-
-Here's a simple example of embedding a marimo notebook using blocks:
-
-````markdown
-/// marimo-embed
-    height: 400px
-    mode: read
-    app_width: medium
-
-```python
-@app.cell
-def __():
-    import marimo as mo
-
-    name = mo.ui.text(placeholder="Enter your name", debounce=False)
-    name
-    return
-
-@app.cell
-def __():
-    mo.md(f"Hello, **{name.value or '__'}**!")
-    return
-```
-
-///
-````
-
-/// marimo-embed
-    height: 400px
-    mode: read
-    app_width: medium
-
-```python
-@app.cell
-def __():
-    import marimo as mo
-
-    name = mo.ui.text(placeholder="Enter your name", debounce=False)
-    name
-    return
-
-@app.cell
-def __():
-    mo.md(f"Hello, **{name.value or '__'}**!")
-    return
-```
-
-///
-
-## Interactive Plot Example
-
-Here's an example with an interactive plot:
-
-````markdown
-/// marimo-embed
-    height: 800px
-    mode: read
-    app_width: medium
-
-```python
-@app.cell
-def __():
-    import marimo as mo
-    import numpy as np
-    import matplotlib.pyplot as plt
-
-    # Create interactive sliders
-    freq = mo.ui.slider(1, 10, value=2, label="Frequency")
-    amp = mo.ui.slider(0.1, 2, value=1, label="Amplitude")
-
-    mo.hstack([freq, amp])
-    return
-
-@app.cell
-def __():
-    # Plot the sine wave
-    x = np.linspace(0, 10, 1000)
-    y = amp.value * np.sin(freq.value * x)
-
-    plt.figure(figsize=(10, 6))
-    plt.plot(x, y)
-    plt.title('Interactive Sine Wave')
-    plt.xlabel('x')
-    plt.ylabel('y')
-    plt.grid(True)
-    plt.gca()
-    return
-```
-
-///
-````
-
-/// marimo-embed
-    height: 800px
-    mode: read
-    app_width: medium
-
-```python
-@app.cell
-def __():
-    import marimo as mo
-    import numpy as np
-    import matplotlib.pyplot as plt
-
-    # Create interactive sliders
-    freq = mo.ui.slider(1, 10, value=2, label="Frequency")
-    amp = mo.ui.slider(0.1, 2, value=1, label="Amplitude")
-
-    mo.hstack([freq, amp])
-    return
-
-@app.cell
-def __():
-    # Plot the sine wave
-    x = np.linspace(0, 10, 1000)
-    y = amp.value * np.sin(freq.value * x)
-
-    plt.figure(figsize=(10, 6))
-    plt.plot(x, y)
-    plt.title('Interactive Sine Wave')
-    plt.xlabel('x')
-    plt.ylabel('y')
-    plt.grid(True)
-    plt.gca()
-    return
-```
-
-///
-
-## Example with Hidden Code
-
-Here's an example that hides the code:
-
-/// marimo-embed
-    height: 400px
-    mode: read
-    app_width: medium
-    include_code: false
-
-```python
-@app.cell
-def __():
-    import marimo as mo
-    import numpy as np
-    import matplotlib.pyplot as plt
-
-    x = np.linspace(0, 10, 100)
-    y = np.sin(x)
-    plt.plot(x, y)
-    plt.title('Simple Sine Wave')
-    plt.gca()
-    return
-```
-
-///
-
-## Inline marimo notebooks
-
-!marimo_file ../../examples/hello.py
-
-## Getting Started
-
-### Interactive Editing
-
-Open a notebook in marimo's interactive editor:
-
-```bash
+# Interactive editing
 just example
-```
 
-Or directly:
-
-```bash
-uv run marimo edit examples/hello.py
-```
-
-### Run as Script
-
-Execute the notebook as a Python script:
-
-```bash
+# Run as script
 python examples/hello.py
 ```
 
-### Deploy as App
+## Next Steps
 
-Serve the notebook as an interactive web app:
-
-```bash
-uv run marimo run examples/hello.py
-```
-
-Then open your browser to the displayed URL.
-
-## Standalone HTML Notebooks
-
-Each example is also available as a standalone interactive HTML page. These pages:
-
-- Run entirely in your browser using WebAssembly (no server needed)
-- Can be shared as single HTML files
-- Work offline once loaded
-- Have a dedicated markdown version for LLM/AI consumption
-
-### Available Standalone Notebooks
-
-- [Hello World](../../examples/hello/) - Introduction to {{ project_name }}
-
-These standalone versions are generated using `marimo export html-wasm` during the documentation build process. They provide the full interactive experience without requiring a marimo server.
-
-## Learn More
-
-- [marimo documentation](https://docs.marimo.io)
-- [marimo examples gallery](https://marimo.io/gallery)
-- [marimo GitHub repository](https://github.com/marimo-team/marimo)
-- [mkdocs-marimo plugin](https://marimo-team.github.io/mkdocs-marimo/)
+- Browse the [API Reference](api-reference.md) for detailed documentation
+- Check the [User Guide](user-guide.md) to understand core concepts
 {% endif %}

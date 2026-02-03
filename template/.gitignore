@@ -71,3 +71,52 @@ site/
 
 # Ruff
 .ruff_cache/
+
+# AI Assistant Instructions
+CLAUDE.md
+CLAUDE_INSTRUCTIONS.md
+.claude.md
+claude-instructions.md
+claude-config.md
+claude-prompt.md
+
+# GitHub Copilot
+COPILOT.md
+COPILOT_INSTRUCTIONS.md
+.copilot.md
+copilot-instructions.md
+copilot-config.md
+copilot-prompt.md
+
+# ChatGPT / OpenAI
+CHATGPT.md
+GPT.md
+OPENAI.md
+chatgpt-instructions.md
+gpt-instructions.md
+openai-instructions.md
+
+# Generic AI/LLM instructions
+AI.md
+AI_INSTRUCTIONS.md
+LLM.md
+LLM_INSTRUCTIONS.md
+.ai-instructions.md
+.llm-instructions.md
+ai-prompt.md
+llm-prompt.md
+assistant-instructions.md
+
+# Custom instructions directories
+.ai/
+.llm/
+.copilot/
+.claude/
+ai-instructions/
+llm-instructions/
+
+# Project-specific AI context (that you want to keep private)
+.cursorrules
+.cursor/
+.aider*
+.continue/

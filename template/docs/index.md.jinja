@@ -1,61 +1,105 @@
 ![](assets/logo_dark.png#only-dark){width=800}
 ![](assets/logo_light.png#only-light){width=800}
 
-# Welcome to {{ project_name }}'s Documentation
+# Welcome to {{ project_name }}'s documentation
 
-{{ description }}
+{{ project_name }} [is a/enables/provides] [brief one-sentence description of what it does and its purpose].
 
-## What is {{ project_name }}?
+[Add 1-2 paragraphs explaining:
+- What this package integrates or provides
+- The main value proposition
+- Key use cases or target audience]
 
-{{ project_name }} is a Python package that provides...
+<div class="grid cards" markdown>
 
-## Features
+- :material-clock-fast:{ .lg .middle } **Get Started in 5 Minutes**
 
-- Feature 1: Description
-- Feature 2: Description
-- Feature 3: Description
+    ---
 
-## Installation
+    Install {{ project_name }} and [achieve first result]
 
-You can install {{ project_name }} using pip:
+    Install → Initialize → Run → Done
 
-```bash
-pip install {{ package_name }}
-```
+    [:octicons-arrow-right-24: Getting Started](pages/getting-started.md)
 
-Or using uv:
+- :material-help-circle:{ .lg .middle } **Need Help?**
 
-```bash
-uv pip install {{ package_name }}
-```
+    ---
 
-## Quick Start
+    Find answers to common questions and troubleshooting tips
 
-Here's a simple example to get you started:
+    [:octicons-arrow-right-24: FAQ & Troubleshooting](pages/user-guide.md#troubleshooting)
 
-```python
-from {{ package_name }}.example import hello
+- :material-school:{ .lg .middle } **Learn the Concepts**
 
-# Use the function
-result = hello("World")
-print(result)  # Output: Hello, World!
-```
+    ---
 
-## Next Steps
+    Understand [core concepts or how components work together]
 
-- Check out the [Getting Started Guide](pages/getting-started.md) for detailed installation instructions
-- Read the [User Guide](pages/user-guide.md) for comprehensive documentation
-{% if include_examples %}- Run the [Examples](pages/examples.md)
-{% endif %}- Explore the [API Reference](pages/api-reference.md) for detailed API documentation
-- Learn how to [contribute](pages/contributing.md) to the project
+    [:octicons-arrow-right-24: Introduction](pages/user-guide.md) · [:octicons-arrow-right-24: User guide](pages/user-guide.md)
 
-## Support
+{% if include_examples %}
+- :material-play-circle:{ .lg .middle } **See It In Action**
 
-If you encounter any issues or have questions:
+    ---
 
-- [Open an issue](https://github.com/{{ github_username }}/{{ project_slug }}/issues) on GitHub
-- Check the [documentation](https://{{ project_slug }}.readthedocs.io/)
+    Explore a complete example [describe what the example demonstrates]
+
+    [:octicons-arrow-right-24: Example Project](pages/examples.md)
+{% endif %}
+
+</div>
+
+<!-- Add a screenshot showing your project in action -->
+![Screenshot of [describe what's shown]](assets/screenshot_dark.png#only-dark)
+![Screenshot of [describe what's shown]](assets/screenshot_light.png#only-light)
+
+*Example of [describe the screenshot - e.g., "a dashboard showing...", "the interface generated from...", etc.]*
+
+*Example of [describe the screenshot - e.g., "a dashboard showing...", "the interface generated from...", etc.]*
+
+## Table of Contents
+
+### [Introduction](pages/user-guide.md)
+
+Overview of {{ project_name }}, its purpose, and key concepts.
+
+- [What Is [Prerequisite/Dependency 1]?](pages/user-guide.md#prerequisites)
+- [What Is [Prerequisite/Dependency 2]?](pages/user-guide.md#prerequisites)
+- [Why {{ project_name }}?](pages/user-guide.md#why-project_name)
+- [Key features](pages/user-guide.md#key-features)
+- [Limitations & considerations](pages/user-guide.md#limitations-and-considerations)
+- [Contributing & community](pages/contributing.md)
+
+### [Getting started](pages/getting-started.md)
+
+Step-by-step guide to installing and setting up {{ project_name }} in your project.
+
+- [1. [First Setup Step]](pages/getting-started.md#1-initializesetup-step)
+- [2. [Installation or Configuration]](pages/getting-started.md#2-configurecustomize-step)
+- [3. [Initialize/Configure Step]](pages/getting-started.md#3-executerun-step)
+
+{% if include_examples %}
+### [Example](pages/examples.md)
+
+A practical example demonstrating how to use {{ project_name }} in a real project.
+
+- [Project overview](pages/examples.md#what-can-project_name-do)
+- [Quick start](pages/examples.md#running-examples-locally)
+{% endif %}
+
+### [User guide](pages/user-guide.md)
+
+In-depth documentation on the design, architecture, and core concepts.
+
+- [Core Concepts](pages/user-guide.md#core-concepts)
+- [Configuration](pages/user-guide.md#configuration)
+- [Best Practices](pages/user-guide.md#best-practices)
+
+### [Reference](pages/api-reference.md)
+
+Detailed reference for the {{ project_name }} API, including classes, functions, and configuration options.
 
 ## License
 
-This project is licensed under the {{ license }} License. See the [LICENSE](https://github.com/{{ github_username }}/{{ project_slug }}/blob/main/LICENSE) file for details.
+{{ project_name }} is open source and licensed under the [{{ license }} License](https://opensource.org/licenses/{{ license }}). You are free to use, modify, and distribute this software under the terms of this license.

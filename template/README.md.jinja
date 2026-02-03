@@ -1,195 +1,143 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/{{ github_username }}/{{ project_slug }}/main/docs/assets/logo_light.png">
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/{{ github_username }}/{{ project_slug }}/main/docs/assets/logo_dark.png">
-    <img src="https://raw.githubusercontent.com/{{ github_username }}/{{ project_slug }}/main/docs/assets/logo_light.png" alt="{{ project_slug }}">
-  </picture>
-</p>
+![{{ project_name }}](https://raw.githubusercontent.com/{{ github_username }}/{{ project_slug }}/main/docs/assets/logo_dark.png)
 
 [![Python Version](https://img.shields.io/pypi/pyversions/{{ package_name }})](https://pypi.org/project/{{ package_name }}/)
-[![License](https://img.shields.io/github/license/{{ github_username }}/{{ project_slug }})](https://github.com/{{ github_username }}/{{ project_slug }}/blob/main/LICENSE.md)
+[![License](https://img.shields.io/github/license/{{ github_username }}/{{ project_slug }})](https://github.com/{{ github_username }}/{{ project_slug }}/blob/main/LICENSE)
 [![PyPI Version](https://img.shields.io/pypi/v/{{ package_name }})](https://pypi.org/project/{{ package_name }}/)
+[![Conda Version](https://img.shields.io/conda/vn/conda-forge/{{ package_name }})](https://anaconda.org/conda-forge/{{ package_name }})
 [![codecov](https://codecov.io/gh/{{ github_username }}/{{ project_slug }}/branch/main/graph/badge.svg)](https://codecov.io/gh/{{ github_username }}/{{ project_slug }})
 
-{{ description }}
+## What is {{ project_name }}?
 
-## Features
+{{ project_name }} [describe what this package does - e.g., "enables seamless integration between X and Y" or "provides a framework for..."].
 
-- Modern Python package structure
-- Fast development with [uv](https://github.com/astral-sh/uv)
-- Code formatting and linting with [ruff](https://github.com/astral-sh/ruff)
-- Type checking with [ty](https://github.com/astral-sh/ty)
-- Testing with [pytest](https://pytest.org/)
-- Documentation with [MkDocs](https://www.mkdocs.org/)
-- CI/CD with [GitHub Actions](https://github.com/features/actions)
-- Pre-commit hooks for code quality
-- Task automation with [just](https://github.com/casey/just)
+[Add 1-2 paragraphs explaining:
+- The main problem or need this addresses
+- How it works at a high level
+- Key technologies or dependencies it integrates with
+- Version compatibility information if relevant]
 
-## Installation
+<!-- Add a screenshot showing your project in action -->
+![{{ project_name }} Screenshot](https://raw.githubusercontent.com/{{ github_username }}/{{ project_slug }}/main/docs/assets/screenshot_dark.png)
 
-Install using pip:
+[Optional: Add version compatibility note]
+<!-- Example: Currently, {{ project_name }} supports Python 3.11+, and [dependency] versions X.Y.z -->
+
+## What are the features of {{ project_name }}?
+
+- **[Feature 1 Name]**: [1-2 sentence description of this capability and why it matters. Focus on the value delivered.]
+- **[Feature 2 Name]**: [1-2 sentence description emphasizing what users can accomplish with this feature.]
+- **[Feature 3 Name]**: [1-2 sentence description of the capability and its benefits.]
+- **[Feature 4 Name]**: [1-2 sentence description showing integration or compatibility aspects.]
+- **[Feature 5 Name]**: [1-2 sentence description of advanced functionality.]
+- **(Experimental) [Feature 6 Name]**: [1-2 sentence description noting this is experimental or in development.]
+
+## How to install {{ project_name }}?
+
+Install the {{ project_name }} package using `pip`:
 
 ```bash
 pip install {{ package_name }}
 ```
 
-Or using uv:
+or using `uv`:
 
 ```bash
 uv pip install {{ package_name }}
 ```
 
-## Quick Start
+or using `conda`:
 
-```python
-from {{ package_name }}.example import hello
-
-# Use the package
-greeting = hello("World")
-print(greeting)  # Output: Hello, World!
+```bash
+conda install -c conda-forge {{ package_name }}
 ```
 
-## Documentation
+or using `mamba`:
 
-Full documentation is available at [https://{{ project_slug }}.readthedocs.io/](https://{{ project_slug }}.readthedocs.io/)
+```bash
+mamba install -c conda-forge {{ package_name }}
+```
+
+or alternatively, add `{{ package_name }}` to your `requirements.txt` or `pyproject.toml` file.
+
+## How to get started with {{ project_name }}?
+
+### 1. [Initialize/Setup Step]
+
+[Brief description of what this step accomplishes]
+
+Use the following command to [describe action]:
+
+```bash
+[command to run]
+```
+
+### 2. [Configure/Customize Step]
+
+[Brief description of what configuration does]
+
+Define your [settings/options] in the `[config file]` located in [location]. This file allows you to [describe what user can configure].
+
+```yaml
+# [config file path]
+[setting_section]:
+  [setting_1]: [value]  # Comment explaining setting
+  [setting_2]: [value]  # Comment explaining setting
+
+[another_section]:
+  [option_1]:
+    [sub_option]: [value]
+
+  [option_2]:
+    [sub_option]: [value]
+```
+
+### 3. [Execute/Run Step]
+
+[Brief description of how to run or execute]
+
+[Action description] using the following command:
+
+```bash
+[command to run]
+```
+
+[Additional context about what happens when this runs, e.g., "The [interface/UI] will be available at http://127.0.0.1:XXXX"]
 
 {% if include_examples %}
-## Examples
-
-Interactive examples are available in the `examples/` directory. View them:
-
-- **Online**: [https://{{ project_slug }}.readthedocs.io/en/latest/pages/examples/](https://{{ project_slug }}.readthedocs.io/en/latest/pages/examples/)
-- **Locally**: Run `marimo edit examples/hello.py` to open an interactive notebook
-- **Standalone**: Each example has a standalone HTML version in the documentation
-
+For a concrete use-case, see the [{{ project_name }} example repository](https://github.com/{{ github_username }}/{{ project_slug }}-example).
 {% endif %}
-## Development
 
-### Prerequisites
+## How do I use {{ project_name }}?
 
-- Python {{ min_python_version }}+
-- [uv](https://github.com/astral-sh/uv) (recommended) or pip
-- [just](https://github.com/casey/just) (optional, for task automation)
+Full documentation is available at [https://{{ project_slug }}.readthedocs.io/](https://{{ project_slug }}.readthedocs.io/).
 
-### Setup
+## Can I contribute?
 
-1. Clone the repository:
+We welcome contributions, feedback, and questions:
 
-```bash
-git clone https://github.com/{{ github_username }}/{{ project_slug }}.git
-cd {{ project_slug }}
-```
+- **Report issues or request features**: [GitHub Issues](https://github.com/{{ github_username }}/{{ project_slug }}/issues)
+- **Join the discussion**: [GitHub Discussions](https://github.com/{{ github_username }}/{{ project_slug }}/discussions)
+- **Contributing Guide**: [CONTRIBUTING.md](https://github.com/{{ github_username }}/{{ project_slug }}/blob/main/CONTRIBUTING.md)
 
-2. Install dependencies:
+If you are interested in becoming a maintainer or taking a more active role, please reach out to {{ author_name }} on [GitHub Discussions](https://github.com/{{ github_username }}/{{ project_slug }}/discussions).
 
-```bash
-uv sync --group dev
-```
+## Where can I learn more?
 
-3. Install pre-commit hooks:
+[Customize this section based on your project's community resources. For example:]
 
-```bash
-uv run pre-commit install
-```
-
-### Testing
-
-Run tests:
-
-```bash
-just test
-# or directly: uv run pytest
-```
-
-Run tests with coverage:
-
-```bash
-just test-cov
-# or directly: uv run pytest --cov={{ package_name }} --cov-report=html
-```
-
-Run all tests across multiple Python versions using nox:
-
-```bash
-uvx nox -s tests
-```
-
-### Linting and Formatting
-
-Format code and fix issues:
-
-```bash
-just format
-```
-
-Run linters and type checkers:
-
-```bash
-just lint
-```
-
-Run all quality checks:
-
-```bash
-just check
-# or with nox: uvx nox -s fix
-```
-
-### Documentation
-
-Build documentation:
-
-```bash
-just docs
-# or: uvx nox -s build_docs
-```
-
-Serve documentation locally:
-
-```bash
-just serve
-# or: uvx nox -s serve_docs
-```
-
-See all available commands:
-
-```bash
-just --list
-```
-
-## Release Process
-
-This project uses an **automated release workflow** powered by GitHub Actions, git-cliff, and conventional commits:
-
-### How It Works
-
-1. **Push a version tag** (e.g., `v1.2.3`):
-   ```bash
-   git tag v0.2.0
-   git push origin v0.2.0
-   ```
-
-2. **Automated workflow triggers**:
-   - 🔨 **Builds** package distributions (wheel + sdist)
-   - 📝 **Generates** changelog from conventional commits using [git-cliff](https://git-cliff.org/)
-   - 🔀 **Creates** a Pull Request with the updated `CHANGELOG.md`
-   - 📦 **Publishes** package to PyPI automatically
-   - 🚀 **Creates** a GitHub Release with release notes
-
-3. **Review and merge** the automated changelog PR to finalize the release on main
-
-The workflow uses **conventional commits** to automatically categorize changes:
-- `feat:` → Added section
-- `fix:` → Fixed section
-- `docs:` → Documentation section
-- `perf:` → Performance section
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for details on commit message format and the full release process.
-
-## Contributing
-
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+- Full documentation: [https://{{ project_slug }}.readthedocs.io/](https://{{ project_slug }}.readthedocs.io/)
+- GitHub Discussions: [https://github.com/{{ github_username }}/{{ project_slug }}/discussions](https://github.com/{{ github_username }}/{{ project_slug }}/discussions)
+{% if include_examples %}- Interactive Examples: [https://{{ project_slug }}.readthedocs.io/en/latest/pages/examples/](https://{{ project_slug }}.readthedocs.io/en/latest/pages/examples/)
+{% endif %}
+For questions and discussions, you can also open a [discussion](https://github.com/{{ github_username }}/{{ project_slug }}/discussions).
 
 ## License
 
-This project is licensed under the {{ license }} License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the terms of the [{{ license }} License](https://github.com/{{ github_username }}/{{ project_slug }}/blob/main/LICENSE).
+
+## Acknowledgements
+
+{{ project_name }} is developed and maintained by [{{ author_name }}](https://github.com/{{ github_username }}).
+
+<!-- Inspired by similar projects? Add them here: -->
+<!-- It is inspired by existing projects such as [Project X](https://github.com/example/project-x), [Project Y](https://github.com/example/project-y). -->

@@ -1,26 +1,26 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/stateful-y/python-package-copier-template/main/docs/assets/logo_light.png">
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/stateful-y/python-package-copier-template/main/docs/assets/logo_dark.png">
-    <img src="https://raw.githubusercontent.com/stateful-y/python-package-copier-template/main/docs/assets/logo_light.png" alt="python-package-copier-template">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/stateful-y/python-package-template/main/docs/assets/logo_light.png">
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/stateful-y/python-package-template/main/docs/assets/logo_dark.png">
+    <img src="https://raw.githubusercontent.com/stateful-y/python-package-template/main/docs/assets/logo_light.png" alt="python-package-template">
   </picture>
 </p>
 
 
 [![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/downloads/)
-[![Tests](https://github.com/stateful-y/python-package-copier-template/workflows/Tests/badge.svg)](https://github.com/stateful-y/python-package-copier-template/actions/workflows/tests.yml)
-[![Documentation](https://readthedocs.org/projects/python-package-copier-template/badge/?version=latest)](https://python-package-copier-template.readthedocs.io/)
+[![Tests](https://github.com/stateful-y/python-package-template/workflows/Tests/badge.svg)](https://github.com/stateful-y/python-package-template/actions/workflows/tests.yml)
+[![Documentation](https://readthedocs.org/projects/python-package-template/badge/?version=latest)](https://python-package-template.readthedocs.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A modern, production-ready Python package template using [Copier](https://copier.readthedocs.io/). Save hours of setup time with best practices, modern tooling (uv, ruff, ty, pytest), and comprehensive CI/CD pipelines already configured.
 
-📚 **[Full Documentation](https://python-package-copier-template.readthedocs.io/)**
+📚 **[Full Documentation](https://python-package-template.readthedocs.io/)**
 
 ## Quick Start
 
 ```bash
 # Create a new package
-uvx copier copy gh:stateful-y/python-package-copier-template my-package
+uvx copier copy gh:stateful-y/python-package-template my-package
 
 # Initialize
 cd my-package
@@ -45,8 +45,8 @@ uv run pytest
 
 ```bash
 # Clone and setup
-git clone https://github.com/stateful-y/python-package-copier-template.git
-cd python-package-copier-template
+git clone https://github.com/stateful-y/python-package-template.git
+cd python-package-template
 uv sync --group test --group docs
 
 # Run unit tests (recommended during development)
@@ -68,7 +68,7 @@ uv run pytest -m "integration or slow" -v
 just serve
 ```
 
-See the [Contributing Guide](https://python-package-copier-template.readthedocs.io/contributing/) and [Testing Documentation](docs/TESTING.md) for details.
+See the [Contributing Guide](https://python-package-template.readthedocs.io/contributing/) and [Testing Documentation](docs/TESTING.md) for details.
 
 ## Test Structure
 
