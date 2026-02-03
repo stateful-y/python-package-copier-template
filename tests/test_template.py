@@ -500,3 +500,38 @@ def test_github_actions_when_disabled(copie):
     if git_cliff.exists():
         content = git_cliff.read_text().strip()
         assert content == "", ".git-cliff.toml should be empty when GitHub Actions are disabled"
+
+
+def test_markdown_docs_script_configuration(copie):
+    """Test that copy_markdown_docs.py script is properly configured."""
+    result = copie.copy(
+        extra_answers={
+            "include_examples": True,
+        },
+    )
+
+    assert result.exit_code == 0
+
+    # Verify copy_markdown_docs.py script exists
+    copy_script = result.project_dir / "scripts" / "copy_markdown_docs.py"
+    assert copy_script.is_file(), "scripts/copy_markdown_docs.py not created"
+
+    # Verify script has correct default docs_dir
+    script_content = copy_script.read_text()
+    assert 'docs_dir = _parse_top_level_value(lines, "docs_dir") or "docs"' in script_content, (
+        "copy_markdown_docs.py should default to 'docs' directory"
+    )
+
+    # Verify noxfile integrates the script in build_docs
+    noxfile_content = (result.project_dir / "noxfile.py").read_text()
+    assert 'session.run("python", "scripts/copy_markdown_docs.py")' in noxfile_content, (
+        "copy_markdown_docs.py should be called in noxfile.py"
+    )
+
+    # Verify ReadTheDocs config includes build hooks
+    rtd_config = result.project_dir / ".readthedocs.yml"
+    rtd_content = rtd_config.read_text()
+    assert "post_install:" in rtd_content
+    assert "python scripts/export_marimo_examples.py" in rtd_content
+    assert "build:" in rtd_content
+    assert "python scripts/copy_markdown_docs.py" in rtd_content

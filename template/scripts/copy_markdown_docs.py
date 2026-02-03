@@ -37,7 +37,7 @@ def _parse_top_level_value(lines: list[str], key: str) -> str | None:
 def _load_config() -> tuple[Path, Path, list[str]]:
     """Load mkdocs configuration: docs_dir, site_dir, and exclude patterns."""
     lines = MKDOCS_YML.read_text(encoding="utf-8").splitlines()
-    docs_dir = _parse_top_level_value(lines, "docs_dir") or "mkdocs"
+    docs_dir = _parse_top_level_value(lines, "docs_dir") or "docs"
     site_dir = _parse_top_level_value(lines, "site_dir") or "site"
     exclude_raw = _parse_top_level_value(lines, "exclude_docs") or ""
     excludes = [value.strip() for value in exclude_raw.split(",") if value.strip()]
