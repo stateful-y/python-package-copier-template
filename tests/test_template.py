@@ -361,9 +361,9 @@ def test_examples_directory_when_enabled(copie):
     assert "examples:" in workflow_content
     assert "nox -s run_examples" in workflow_content
 
-    # Check README mentions examples
+    # Check README mentions examples (in "Where can I learn more?" section)
     readme_content = (result.project_dir / "README.md").read_text()
-    assert "## Examples" in readme_content
+    assert "Interactive Examples:" in readme_content or "examples/" in readme_content
     assert "marimo edit examples/hello.py" in readme_content
 
     # Check CONTRIBUTING mentions adding examples
@@ -644,8 +644,12 @@ def test_markdown_docs_created_and_clean(copie):
         assert len(content) > 0, f"{md_file} is empty"
 
         # Should not contain raw HTML tags from mkdocs-material
+        # Exception: index.md can contain <div class="grid cards"> for Material CTA cards
         html_tags_to_check = ["<article", "<div class=", "<nav class=", "<header class="]
         for tag in html_tags_to_check:
+            # Allow <div class=> in index.md for Material grid cards feature
+            if tag == "<div class=" and md_file.name == "index.md":
+                continue
             assert tag not in content, f"{md_file.name} contains HTML tag: {tag}"
 
         # Should contain markdown formatting

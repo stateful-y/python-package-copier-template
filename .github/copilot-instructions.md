@@ -1,4 +1,4 @@
-# Python Package Copier Template - AI Coding Agent Instructions
+# Python Package Template - AI Coding Agent Instructions
 
 ## Project Overview
 
@@ -34,7 +34,10 @@ See `template/pyproject.toml.jinja` and `template/noxfile.py.jinja` for usage ex
 
 ### Testing Template Changes
 ```bash
-# Test template generation (uses tests/conftest.py fixture)
+# Fast tests only (unit tests, no subprocess calls) - recommended during development
+uv run pytest -m "not slow and not integration"
+
+# All tests including integration tests
 uv run pytest -v
 
 # Or use nox for multi-version testing
@@ -47,6 +50,12 @@ The test suite uses copier's `run_copy()` to generate actual projects in temp di
 - Multiple license options generate correctly
 - GitHub workflows are properly templated with uv and ty
 
+**Test Organization**:
+- **Unit tests** (unmarked): Fast validation of template generation and content
+- **`@pytest.mark.integration`**: Tests that run generated project commands (nox sessions, pytest, etc.)
+- **`@pytest.mark.slow`**: Long-running tests (typically 30+ seconds each)
+- Test modules: `test_template.py` (comprehensive), `test_option_values.py` (individual options), `test_option_combinations.py` (option interactions), `test_github_workflows.py` (workflow validation), `test_docs_content.py` (documentation)
+
 **Important**: `CopierTestFixture` (in [tests/conftest.py](tests/conftest.py)) provides default answers for all prompts. Tests use `result.project_dir` to access the generated temporary project. Assertions should verify *generated* project content, not template source files.
 
 **Common test pattern**:
@@ -56,6 +65,15 @@ def test_feature(copie):
     assert (result.project_dir / "LICENSE").is_file()
     content = (result.project_dir / "pyproject.toml").read_text()
     assert "expected_string" in content
+```
+
+**Integration test pattern** (runs actual commands in generated project):
+```python
+@pytest.mark.integration
+@pytest.mark.slow
+def test_generated_project_builds(copie):
+    result = copie.copy()
+    subprocess.run(["uvx", "nox", "-s", "tests"], cwd=result.project_dir, check=True)
 ```
 
 See [tests/test_template.py](tests/test_template.py) for assertion patterns.
@@ -154,6 +172,18 @@ When adding files to generated projects:
 - Generated `noxfile.py.jinja` tests against multiple Python versions (3.11-3.14)
 
 ## Integration Points
+
+### Template Repository CI/CD
+The template repository itself has GitHub Actions workflows:
+- **`tests.yml`**: Three-tier test strategy
+  - `test-fast`: Runs unit tests only (`-m "not slow and not integration"`) on all Python versions (3.11-3.14) for every PR/push
+  - `test-integration`: Runs integration/slow tests on Python 3.11 & 3.14 only, triggered on main branch, non-draft PRs, or manual dispatch
+  - `test-full`: Runs complete test suite with coverage on main branch only
+- **`changelog.yml`**: Updates CHANGELOG.md via git-cliff when version tags are pushed
+- **`publish-release.yml`**: Publishes to PyPI and creates GitHub releases on tag push
+- **`pr-title.yml`**: Validates PR titles follow conventional commit format
+
+**Test execution strategy**: Fast unit tests provide quick feedback on PRs (<5 min), while comprehensive integration tests validate generated projects work end-to-end (run on main or manually).
 
 ### GitHub Actions
 Generated projects include workflows (if `include_actions: true`):

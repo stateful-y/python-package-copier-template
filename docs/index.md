@@ -1,7 +1,7 @@
 ![](assets/logo_dark.png#only-dark){width=800}
 ![](assets/logo_light.png#only-light){width=800}
 
-# Welcome to Python Package Copier Template's Documentation
+# Welcome to Python Copier Template's Documentation
 
 A modern Python package template using [Copier](https://copier.readthedocs.io/) that gets you from zero to production-ready in minutes.
 

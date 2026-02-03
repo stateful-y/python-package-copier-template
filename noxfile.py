@@ -1,4 +1,4 @@
-"""Nox sessions for the python-package-copier-template."""
+"""Nox sessions for the python-package-template."""
 
 import nox
 

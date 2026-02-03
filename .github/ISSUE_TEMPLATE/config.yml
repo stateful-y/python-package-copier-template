@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Question or Discussion
-    url: https://github.com/stateful-y/python-package-copier-template/discussions
+    url: https://github.com/stateful-y/python-package-template/discussions
     about: Please use GitHub Discussions for questions and general discussions
   - name: Documentation
-    url: https://stateful-y.github.io/python-package-copier-template/
+    url: https://stateful-y.github.io/python-package-template/
     about: Check the documentation for guides and references
