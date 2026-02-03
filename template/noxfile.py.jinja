@@ -120,8 +120,20 @@ def doctest(session: nox.Session) -> None:
 
 {% if include_examples %}
 
-@nox.session(venv_backend="uv")
-def run_examples(session: nox.Session) -> None:
+@nox.session(venv_backend="uv")def export_examples(session: nox.Session) -> None:
+    """Export marimo examples to HTML for documentation."""
+    session.run_install(
+        "uv",
+        "sync",
+        "--no-default-groups",
+        "--group",
+        "examples",
+        env={"UV_PROJECT_ENVIRONMENT": session.virtualenv.location},
+    )
+    session.run("python", "scripts/export_marimo_examples.py", *session.posargs)
+
+
+@nox.session(venv_backend="uv")def run_examples(session: nox.Session) -> None:
     """Run marimo notebook examples to validate they execute."""
     # Install dependencies
     session.run_install(
@@ -171,8 +183,17 @@ def build_docs(session: nox.Session) -> None:
         env={"UV_PROJECT_ENVIRONMENT": session.virtualenv.location},
     )
 
+    {% if include_examples %}
+    # Export marimo examples first
+    session.run("python", "scripts/export_marimo_examples.py")
+    {% endif %}
+
     # Build the docs
     session.run("mkdocs", "build", "--clean", external=True)
+
+    # Copy markdown for LLMs
+    session.run("python", "scripts/copy_markdown_docs.py")
+
 
 
 @nox.session(venv_backend="uv")
@@ -188,7 +209,13 @@ def serve_docs(session: nox.Session) -> None:
         env={"UV_PROJECT_ENVIRONMENT": session.virtualenv.location},
     )
 
+    {% if include_examples %}
+    # Export marimo examples first
+    session.run("python", "scripts/export_marimo_examples.py")
+    {% endif %}
+
     # Build and serve the docs
     session.run("mkdocs", "build", "--clean", external=True)
+    session.run("python", "scripts/copy_markdown_docs.py")
     session.log("###### Starting local server. Press Control+C to stop server ######")
     session.run("mkdocs", "serve", "-a", "localhost:8080", external=True)

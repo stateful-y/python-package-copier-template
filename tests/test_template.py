@@ -324,29 +324,53 @@ def test_examples_directory_when_enabled(copie):
     assert "plotly" in pyproject_content
     assert "mkdocs-marimo" in pyproject_content
 
-    # Check noxfile has run_examples session
+    # Check noxfile has export_examples and run_examples sessions
     noxfile_content = (result.project_dir / "noxfile.py").read_text()
+    assert "def export_examples(session:" in noxfile_content
     assert "def run_examples(session:" in noxfile_content
     assert "examples/hello.py" in noxfile_content
+    assert "scripts/export_marimo_examples.py" in noxfile_content
+
+    # Check docs/examples/ directory for exports
+    docs_examples_dir = result.project_dir / "docs" / "examples"
+    assert docs_examples_dir.is_dir(), "docs/examples/ directory not created"
+
+    # Check export script exists
+    export_script = result.project_dir / "scripts" / "export_marimo_examples.py"
+    assert export_script.is_file(), "scripts/export_marimo_examples.py not created"
 
     # Check justfile has example command
     justfile_content = (result.project_dir / "justfile").read_text()
     assert "example:" in justfile_content
     assert "marimo edit" in justfile_content
 
-    # Check examples.md exists
+    # Check examples.md exists and mentions standalone notebooks
     examples_md = result.project_dir / "docs" / "pages" / "examples.md"
     assert examples_md.is_file(), "docs/pages/examples.md not created"
+    examples_content = examples_md.read_text()
+    assert "Standalone HTML Notebooks" in examples_content
+    assert "../examples/hello/" in examples_content
 
-    # Check mkdocs.yml includes examples in nav
+    # Check mkdocs.yml includes examples in nav and has exclude_docs
     mkdocs_content = (result.project_dir / "mkdocs.yml").read_text()
     assert "Examples: pages/examples.md" in mkdocs_content
+    assert "exclude_docs: examples/**/index.html" in mkdocs_content
 
     # Check GitHub workflow includes examples job
     tests_workflow = result.project_dir / ".github" / "workflows" / "tests.yml"
     workflow_content = tests_workflow.read_text()
     assert "examples:" in workflow_content
     assert "nox -s run_examples" in workflow_content
+
+    # Check README mentions examples
+    readme_content = (result.project_dir / "README.md").read_text()
+    assert "## Examples" in readme_content
+    assert "marimo edit examples/hello.py" in readme_content
+
+    # Check CONTRIBUTING mentions adding examples
+    contributing_content = (result.project_dir / "docs" / "pages" / "contributing.md").read_text()
+    assert "### Adding Examples" in contributing_content
+    assert "export_examples" in contributing_content
 
 
 def test_examples_directory_when_disabled(copie):

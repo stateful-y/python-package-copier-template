@@ -79,6 +79,11 @@ markdown_extensions:
       custom_checkbox: true
   - pymdownx.tilde
 
+# Exclude exported HTML files from mkdocs processing
+{% if include_examples %}
+exclude_docs: examples/**/index.html
+{% endif %}
+
 validation:
   nav:
     omitted_files: warn

@@ -283,6 +283,21 @@ uv run marimo run examples/hello.py
 
 Then open your browser to the displayed URL.
 
+## Standalone HTML Notebooks
+
+Each example is also available as a standalone interactive HTML page. These pages:
+
+- Run entirely in your browser using WebAssembly (no server needed)
+- Can be shared as single HTML files
+- Work offline once loaded
+- Have a dedicated markdown version for LLM/AI consumption
+
+### Available Standalone Notebooks
+
+- [Hello World](../examples/hello/) - Introduction to {{ project_name }}
+
+These standalone versions are generated using `marimo export html-wasm` during the documentation build process. They provide the full interactive experience without requiring a marimo server.
+
 ## Learn More
 
 - [marimo documentation](https://docs.marimo.io)

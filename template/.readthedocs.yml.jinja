@@ -18,7 +18,15 @@ build:
       - uv venv "${READTHEDOCS_VIRTUALENV_PATH}"
     install:
       # Sync doc-dependencies (the group “docs”), then install the project itself
-      - UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}" uv sync --group docs
+      - UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}" uv sync --group docs{% if include_examples %}
+    post_install:
+      # Export marimo examples to HTML before building docs
+      - UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}" uv run python scripts/export_marimo_examples.py
+{% endif %}
+    build:
+      # Manually build docs so we can run post-processing
+      - UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}" uv run mkdocs build --clean
+      # Copy markdown files for LLM/AI consumption
+      - UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}" uv run python scripts/copy_markdown_docs.py
 
-mkdocs:
-  configuration: mkdocs.yml
+site_dir: site
