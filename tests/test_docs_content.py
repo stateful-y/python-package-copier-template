@@ -12,6 +12,26 @@ import pytest
 import yaml
 
 
+class SafeMkdocsLoader(yaml.SafeLoader):
+    """Custom YAML loader that handles !!python/name: tags without importing modules.
+
+    This is needed because mkdocs.yml contains Material for MkDocs emoji configuration
+    with !!python/name: tags that reference Python modules that may not be installed
+    during testing. We convert these tags to plain strings for validation purposes.
+    """
+
+    pass
+
+
+def construct_python_name(loader, suffix, node):
+    """Convert !!python/name: tags to strings instead of importing the modules."""
+    return loader.construct_scalar(node)
+
+
+# Register multi constructor to handle any python/name: tag
+SafeMkdocsLoader.add_multi_constructor("tag:yaml.org,2002:python/name:", construct_python_name)
+
+
 class TestDocsIndexContent:
     """Test the main documentation index page."""
 
@@ -302,7 +322,7 @@ class TestMkdocsConfiguration:
         mkdocs_file = result.project_dir / "mkdocs.yml"
         assert mkdocs_file.is_file()
 
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         # Required fields
         assert "site_name" in mkdocs_data
@@ -323,7 +343,7 @@ class TestMkdocsConfiguration:
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
         content = mkdocs_file.read_text(encoding="utf-8")
-        mkdocs_data = yaml.safe_load(content)
+        mkdocs_data = yaml.load(content, Loader=SafeMkdocsLoader)
 
         # Check site_name
         assert mkdocs_data["site_name"] == "Custom Project"
@@ -343,7 +363,7 @@ class TestMkdocsConfiguration:
         assert result.exit_code == 0
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         nav = mkdocs_data.get("nav", [])
         assert len(nav) > 0
@@ -360,7 +380,7 @@ class TestMkdocsConfiguration:
         assert result.exit_code == 0
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         nav = mkdocs_data.get("nav", [])
         nav_str = str(nav).lower()
@@ -374,7 +394,7 @@ class TestMkdocsConfiguration:
         assert result.exit_code == 0
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         nav = mkdocs_data.get("nav", [])
         nav_str = str(nav).lower()
@@ -388,7 +408,7 @@ class TestMkdocsConfiguration:
         assert result.exit_code == 0
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         theme = mkdocs_data.get("theme", {})
         if isinstance(theme, dict):
@@ -402,7 +422,7 @@ class TestMkdocsConfiguration:
         assert result.exit_code == 0
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         assert "plugins" in mkdocs_data
         plugins = mkdocs_data["plugins"]
@@ -417,7 +437,7 @@ class TestMkdocsConfiguration:
         assert result.exit_code == 0
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         plugins = mkdocs_data.get("plugins", [])
         plugins_str = str(plugins).lower()
@@ -431,7 +451,7 @@ class TestMkdocsConfiguration:
         assert result.exit_code == 0
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         plugins = mkdocs_data.get("plugins", [])
         plugins_str = str(plugins).lower()
@@ -445,7 +465,7 @@ class TestMkdocsConfiguration:
         assert result.exit_code == 0
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         # Should have hooks section
         assert "hooks" in mkdocs_data
@@ -462,7 +482,7 @@ class TestMkdocsConfiguration:
         mkdocs_file = result.project_dir / "mkdocs.yml"
         assert mkdocs_file.is_file()
 
-        # Read as text since yaml.safe_load can't handle !!python/name tags
+        # Read as text since yaml.full_load can't handle !!python/name tags
         content = mkdocs_file.read_text(encoding="utf-8")
 
         # Check that pymdownx.emoji is configured with emoji_index and emoji_generator
