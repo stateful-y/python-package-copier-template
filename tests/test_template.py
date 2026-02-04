@@ -48,6 +48,34 @@ def test_readthedocs_config_included(copie):
     assert (result.project_dir / ".readthedocs.yml").is_file()
 
 
+def test_gitignore_includes_examples_when_enabled(copie):
+    """Test that .gitignore includes examples section when include_examples is true."""
+    result = copie.copy(extra_answers={"include_examples": True})
+
+    gitignore = result.project_dir / ".gitignore"
+    assert gitignore.is_file()
+
+    content = gitignore.read_text(encoding="utf-8")
+
+    # Should have documentation examples section
+    assert "# Documentation examples" in content
+    assert "docs/examples/*/" in content
+
+
+def test_gitignore_excludes_examples_when_disabled(copie):
+    """Test that .gitignore excludes examples section when include_examples is false."""
+    result = copie.copy(extra_answers={"include_examples": False})
+
+    gitignore = result.project_dir / ".gitignore"
+    assert gitignore.is_file()
+
+    content = gitignore.read_text(encoding="utf-8")
+
+    # Should NOT have documentation examples section
+    assert "# Documentation examples" not in content
+    assert "docs/examples/*/" not in content
+
+
 def test_generated_project_structure(copie):
     """Test that the generated project has the correct structure."""
     result = copie.copy()
@@ -105,6 +133,22 @@ def test_generated_pyproject_uses_correct_tools(copie):
     assert "nox" not in content, "nox should not be in pyproject.toml (install globally with uvx)"
 
 
+def test_pyproject_has_interrogate_config(copie):
+    """Test that pyproject.toml includes interrogate configuration."""
+    result = copie.copy()
+
+    pyproject_path = result.project_dir / "pyproject.toml"
+    assert pyproject_path.is_file()
+
+    content = pyproject_path.read_text(encoding="utf-8")
+
+    # Should have interrogate configuration section
+    assert "[tool.interrogate]" in content
+    assert "ignore-init-method = true" in content
+    assert "fail-under = 75" in content
+    assert '"setup.py", "docs", "build", "tests", "*_version.py"' in content
+
+
 def test_generated_project_has_correct_license(copie):
     """Test that the generated project has the correct license."""
     result = copie.copy(
@@ -153,6 +197,36 @@ def test_precommit_configuration(copie):
 
     # Check for commitizen
     assert "commitizen" in content, "commitizen not found in pre-commit config"
+
+
+def test_precommit_interrogate_checks_only_src(copie):
+    """Test that interrogate pre-commit hook only checks src/ directory."""
+    result = copie.copy()
+
+    precommit_path = result.project_dir / ".pre-commit-config.yaml"
+    assert precommit_path.is_file()
+
+    content = precommit_path.read_text(encoding="utf-8")
+
+    # Should have interrogate configured to check only src/
+    assert "interrogate" in content
+    assert "files: ^src/" in content
+    assert r"exclude: .*_version\.py$" in content
+
+
+def test_precommit_ty_uses_uv_run(copie):
+    """Test that ty pre-commit hook uses uv run with proper configuration."""
+    result = copie.copy()
+
+    precommit_path = result.project_dir / ".pre-commit-config.yaml"
+    assert precommit_path.is_file()
+
+    content = precommit_path.read_text(encoding="utf-8")
+
+    # Should have ty configured with uv run
+    assert "id: ty" in content
+    assert "entry: uv run ty check src" in content
+    assert "pass_filenames: false" in content
 
 
 def test_github_workflows(copie):
