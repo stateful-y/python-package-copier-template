@@ -23,5 +23,3 @@ build:
 # MkDocs configuration
 mkdocs:
   configuration: mkdocs.yml
-
-site_dir: site
