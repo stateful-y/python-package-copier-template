@@ -107,7 +107,7 @@ The automated release process follows this flow with a **manual approval gate** 
 graph LR
     A[Push Tag<br/>v*.*.*] --> B[changelog.yml]
     B --> C[Generate<br/>CHANGELOG.md]
-    B --> D[Build Package]
+    B --> D[Build Package<br/>validation]
     C --> E[Create PR]
     E --> F[Review & Merge<br/>PR]
     F --> G[publish-release.yml]
@@ -153,8 +153,8 @@ Triggers on version tags (`v*.*.*`):
 - Generates changelog from conventional commits using git-cliff
 - Creates a **Pull Request** with updated `CHANGELOG.md`
 - Runs pre-commit hooks on generated changelog
-- Builds and validates package distributions
-- Stores distributions as workflow artifacts for later use
+- Builds and validates package distributions for **immediate validation**
+- Stores distributions as workflow artifacts for reuse (avoiding rebuilds)
 - **Requires** `CHANGELOG_AUTOMATION_TOKEN` secret for PR creation
 
 ### publish-release.yml - GitHub Releases and PyPI Publishing

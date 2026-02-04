@@ -118,7 +118,7 @@ Releases are automated via GitHub Actions with a **manual approval gate** before
 graph LR
     A[Push Tag<br/>v*.*.*] --> B[changelog.yml]
     B --> C[Generate<br/>CHANGELOG.md]
-    B --> D[Build Package]
+    B --> D[Build Package<br/>validation]
     C --> E[Create PR]
     E --> F[Review & Merge<br/>PR]
     F --> G[publish-release.yml]
@@ -186,8 +186,8 @@ This ensures that no package is published to PyPI without explicit approval from
 3. **Automated changelog workflow** (`changelog.yml`):
    - Generates the changelog using [git-cliff](https://git-cliff.org/)
    - Creates a **Pull Request** with the updated `CHANGELOG.md`
-   - Builds the package distributions (wheels and sdist)
-   - Stores distributions as workflow artifacts
+   - Builds the package distributions (wheels and sdist) for **immediate validation**
+   - Stores distributions as workflow artifacts (reused later to avoid rebuilding)
 
 4. **Review and merge the changelog PR**:
    - Review the generated changelog
