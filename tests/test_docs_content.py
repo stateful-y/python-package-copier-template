@@ -12,6 +12,26 @@ import pytest
 import yaml
 
 
+class SafeMkdocsLoader(yaml.SafeLoader):
+    """Custom YAML loader that handles !!python/name: tags without importing modules.
+
+    This is needed because mkdocs.yml contains Material for MkDocs emoji configuration
+    with !!python/name: tags that reference Python modules that may not be installed
+    during testing. We convert these tags to plain strings for validation purposes.
+    """
+
+    pass
+
+
+def construct_python_name(loader, suffix, node):
+    """Convert !!python/name: tags to strings instead of importing the modules."""
+    return loader.construct_scalar(node)
+
+
+# Register multi constructor to handle any python/name: tag
+SafeMkdocsLoader.add_multi_constructor("tag:yaml.org,2002:python/name:", construct_python_name)
+
+
 class TestDocsIndexContent:
     """Test the main documentation index page."""
 
@@ -193,6 +213,69 @@ class TestContributingPage:
         # Should mention nox or pytest
         assert "nox" in content or "pytest" in content
 
+    def test_contributing_has_github_links_in_questions_section(self, copie):
+        """Test that Questions section has clickable GitHub links."""
+        custom_answers = {
+            "github_username": "testuser",
+            "project_slug": "test-project",
+        }
+        result = copie.copy(extra_answers=custom_answers)
+        assert result.exit_code == 0
+
+        contributing = result.project_dir / "docs" / "pages" / "contributing.md"
+        content = contributing.read_text(encoding="utf-8")
+
+        # Should have Questions section
+        assert "## Questions?" in content
+
+        # Should have GitHub issue link
+        assert "[Open an issue on GitHub](https://github.com/testuser/test-project/issues/new)" in content
+
+        # Should have GitHub discussions link
+        assert "[Start a discussion in the repository](https://github.com/testuser/test-project/discussions)" in content
+
+    def test_contributing_has_proper_semver_list_formatting(self, copie):
+        """Test that Semantic Versioning section has properly formatted list."""
+        result = copie.copy(extra_answers={})
+        assert result.exit_code == 0
+
+        contributing = result.project_dir / "docs" / "pages" / "contributing.md"
+        content = contributing.read_text(encoding="utf-8")
+
+        # Should have Version Numbering section with Semantic Versioning
+        assert "### Version Numbering" in content
+        assert "[Semantic Versioning](https://semver.org/)" in content
+
+        # Check that there's a blank line before the list (proper markdown formatting)
+        lines = content.split("\n")
+        semver_line_idx = None
+        for i, line in enumerate(lines):
+            if "[Semantic Versioning](https://semver.org/):" in line:
+                semver_line_idx = i
+                break
+
+        assert semver_line_idx is not None, "Semantic Versioning line not found"
+
+        # Next line should be blank, then the list items
+        assert lines[semver_line_idx + 1].strip() == "", "Missing blank line before list"
+        assert "- **Major**" in lines[semver_line_idx + 2]
+
+    def test_contributing_has_improved_mermaid_colors(self, copie):
+        """Test that release process mermaid diagram has improved colors for visibility."""
+        result = copie.copy(extra_answers={})
+        assert result.exit_code == 0
+
+        contributing = result.project_dir / "docs" / "pages" / "contributing.md"
+        content = contributing.read_text(encoding="utf-8")
+
+        # Should have mermaid diagram with improved styling
+        assert "```mermaid" in content
+
+        # Check for improved color styling (amber/orange and emerald green with white text)
+        assert "fill:#f59e0b" in content  # Amber/orange color
+        assert "fill:#10b981" in content  # Emerald green color
+        assert "color:#fff" in content  # White text color for contrast
+
 
 class TestExamplesPage:
     """Test the examples documentation page (when enabled)."""
@@ -239,7 +322,7 @@ class TestMkdocsConfiguration:
         mkdocs_file = result.project_dir / "mkdocs.yml"
         assert mkdocs_file.is_file()
 
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         # Required fields
         assert "site_name" in mkdocs_data
@@ -260,7 +343,7 @@ class TestMkdocsConfiguration:
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
         content = mkdocs_file.read_text(encoding="utf-8")
-        mkdocs_data = yaml.safe_load(content)
+        mkdocs_data = yaml.load(content, Loader=SafeMkdocsLoader)
 
         # Check site_name
         assert mkdocs_data["site_name"] == "Custom Project"
@@ -280,7 +363,7 @@ class TestMkdocsConfiguration:
         assert result.exit_code == 0
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         nav = mkdocs_data.get("nav", [])
         assert len(nav) > 0
@@ -297,7 +380,7 @@ class TestMkdocsConfiguration:
         assert result.exit_code == 0
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         nav = mkdocs_data.get("nav", [])
         nav_str = str(nav).lower()
@@ -311,7 +394,7 @@ class TestMkdocsConfiguration:
         assert result.exit_code == 0
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         nav = mkdocs_data.get("nav", [])
         nav_str = str(nav).lower()
@@ -325,7 +408,7 @@ class TestMkdocsConfiguration:
         assert result.exit_code == 0
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         theme = mkdocs_data.get("theme", {})
         if isinstance(theme, dict):
@@ -339,7 +422,7 @@ class TestMkdocsConfiguration:
         assert result.exit_code == 0
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         assert "plugins" in mkdocs_data
         plugins = mkdocs_data["plugins"]
@@ -354,7 +437,7 @@ class TestMkdocsConfiguration:
         assert result.exit_code == 0
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         plugins = mkdocs_data.get("plugins", [])
         plugins_str = str(plugins).lower()
@@ -368,7 +451,7 @@ class TestMkdocsConfiguration:
         assert result.exit_code == 0
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         plugins = mkdocs_data.get("plugins", [])
         plugins_str = str(plugins).lower()
@@ -382,7 +465,7 @@ class TestMkdocsConfiguration:
         assert result.exit_code == 0
 
         mkdocs_file = result.project_dir / "mkdocs.yml"
-        mkdocs_data = yaml.safe_load(mkdocs_file.read_text(encoding="utf-8"))
+        mkdocs_data = yaml.load(mkdocs_file.read_text(encoding="utf-8"), Loader=SafeMkdocsLoader)
 
         # Should have hooks section
         assert "hooks" in mkdocs_data
@@ -390,6 +473,24 @@ class TestMkdocsConfiguration:
 
         # Should reference docs/hooks.py
         assert "docs/hooks.py" in hooks
+
+    def test_mkdocs_yml_has_emoji_extension_configured(self, copie):
+        """Test that mkdocs.yml has emoji extension with proper configuration for Material icons."""
+        result = copie.copy(extra_answers={})
+        assert result.exit_code == 0
+
+        mkdocs_file = result.project_dir / "mkdocs.yml"
+        assert mkdocs_file.is_file()
+
+        # Read as text since yaml.full_load can't handle !!python/name tags
+        content = mkdocs_file.read_text(encoding="utf-8")
+
+        # Check that pymdownx.emoji is configured with emoji_index and emoji_generator
+        assert "pymdownx.emoji:" in content
+        assert "emoji_index:" in content
+        assert "!!python/name:material.extensions.emoji.twemoji" in content
+        assert "emoji_generator:" in content
+        assert "!!python/name:material.extensions.emoji.to_svg" in content
 
 
 class TestDocumentationVariableSubstitution:
