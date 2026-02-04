@@ -16,8 +16,13 @@ This is a **Copier template project** that generates modern Python packages. You
   - All files ending in `.jinja` are rendered by Copier
   - Variable substitution uses `{{ variable_name }}` syntax
   - Non-.jinja files are copied verbatim
+  - Conditional directories use Jinja syntax in names: `{% if include_actions %}workflows{% endif %}/`
 - **`copier.yml`**: Template configuration defining user prompts and defaults
+  - Defines all template variables, types, help text, defaults, and choices
+  - Includes validators for cross-field validation (e.g., max >= min Python version)
 - **Root files**: Development setup for the template repository itself
+  - Root `pyproject.toml` contains only test/docs dependencies (not package deps)
+  - Root `noxfile.py` defines sessions for template development
 
 ### Template Variables
 Variables defined in `copier.yml` are used in `.jinja` files:
@@ -54,7 +59,9 @@ The test suite uses copier's `run_copy()` to generate actual projects in temp di
 - **Unit tests** (unmarked): Fast validation of template generation and content
 - **`@pytest.mark.integration`**: Tests that run generated project commands (nox sessions, pytest, etc.)
 - **`@pytest.mark.slow`**: Long-running tests (typically 30+ seconds each)
-- Test modules: `test_template.py` (comprehensive), `test_option_values.py` (individual options), `test_option_combinations.py` (option interactions), `test_github_workflows.py` (workflow validation), `test_docs_content.py` (documentation)
+- **Marker usage**: Use `-m "not slow and not integration"` to run fast tests only
+- Test modules: `test_template.py` (comprehensive), `test_option_values.py` (individual options), `test_option_combinations.py` (option interactions), `test_github_workflows.py` (workflow validation), `test_docs_content.py` (documentation), `test_template_options.py` (template option handling)
+- All test modules are configured in `pyproject.toml` under `[tool.pytest.ini_options]`
 
 **Important**: `CopierTestFixture` (in [tests/conftest.py](tests/conftest.py)) provides default answers for all prompts. Tests use `result.project_dir` to access the generated temporary project. Assertions should verify *generated* project content, not template source files.
 
@@ -163,6 +170,7 @@ Note: `ty` runs as a local hook requiring system installation.
 ### Modifying Generated Structure
 When adding files to generated projects:
 - Create in `template/` with `.jinja` suffix if needs variable substitution
+- Conditional files/directories use Jinja2 control flow in directory names (see `.github/workflows` example)
 - Update `tests/test_template.py` expected files/dirs lists
 - Document in `docs/structure.md` (if exists)
 

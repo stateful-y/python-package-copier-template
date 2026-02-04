@@ -25,6 +25,33 @@
 | **Changelog** | git-cliff | Automated changelog generation |
 | **Commit Convention** | commitizen | Conventional commits enforcement |
 
+## Template Variables
+
+When creating a new project with `uvx copier copy gh:stateful-y/python-package-template my-package`, you'll be prompted for these variables:
+
+| Variable | Type | Default | Description |
+|----------|------|---------|-------------|
+| `project_name` | str | *required* | Human-readable project name (e.g., "My Awesome Package") |
+| `package_name` | str | *derived* | Python import name with underscores (e.g., "my_awesome_package")<br>Auto-generated from `project_name` |
+| `project_slug` | str | *derived* | Repository/URL name with hyphens (e.g., "my-awesome-package")<br>Auto-generated from `project_name` |
+| `version` | str | `0.1.0` | Initial package version following [Semantic Versioning](https://semver.org/) |
+| `description` | str | `""` | One-line project description for README and package metadata |
+| `author_name` | str | *required* | Author or maintainer name |
+| `author_email` | str | *required* | Author or maintainer email |
+| `github_username` | str | `""` | GitHub username or organization (used in URLs and badges) |
+| `license` | str | `MIT` | Project license. Choices:<br>• Apache-2.0<br>• MIT<br>• BSD-3-Clause<br>• GPL-3.0<br>• Proprietary |
+| `min_python_version` | str | `3.11` | Minimum Python version. Choices: 3.11, 3.12, 3.13, 3.14 |
+| `max_python_version` | str | `3.14` | Maximum Python version. Choices: 3.11, 3.12, 3.13, 3.14<br>Must be ≥ `min_python_version` |
+| `include_actions` | bool | `true` | Include GitHub Actions CI/CD workflows (tests, changelog, releases) |
+| `include_examples` | bool | `true` | Include `examples/` directory with [marimo](https://marimo.io/) interactive notebooks |
+
+**Note**: Derived variables (`package_name`, `project_slug`) are auto-generated but can be overridden during setup.
+
+**Example**:
+- `project_name`: "My Data Tool"
+- `package_name`: "my_data_tool" (underscores for Python imports)
+- `project_slug`: "my-data-tool" (hyphens for repository names and URLs)
+
 ## Generated Project Structure
 
 ```
@@ -72,10 +99,34 @@ my-package/
 
 ## GitHub Actions Workflows
 
+### Release Workflow
+
+The automated release process follows this flow:
+
+```mermaid
+graph LR
+    A[Push Tag<br/>v*.*.*] --> B[changelog.yml]
+    B --> C[Generate<br/>CHANGELOG.md]
+    B --> D[Build Package]
+    D --> E[Publish to PyPI]
+    C --> F[Create PR]
+    F --> G[Review & Merge]
+    G --> H[publish-release.yml]
+    H --> I[Create GitHub<br/>Release]
+```
+
+**Steps**:
+1. Developer pushes version tag (e.g., `git tag v0.2.0 && git push origin v0.2.0`)
+2. `changelog.yml` triggers, generates changelog, builds package, publishes to PyPI, creates PR
+3. Developer reviews and merges the changelog PR
+4. `publish-release.yml` triggers on PR merge, creates GitHub Release with artifacts
+
+**Required secrets**: `PYPI_API_TOKEN`, `RELEASE_AUTOMATION_TOKEN`, `CODECOV_TOKEN`
+
 ### tests.yml - Continuous Integration
 
 Runs on every push and pull request:
-- Tests across Python 3.11, 3.12, 3.13, 3.14
+- Tests across multiple Python versions (configurable via `min_python_version` and `max_python_version` template variables, defaults to 3.11-3.14)
 - Tests on Ubuntu, Windows, and macOS
 - Matrix of 15 combinations
 - **Uploads coverage to Codecov** (requires `CODECOV_TOKEN` secret)

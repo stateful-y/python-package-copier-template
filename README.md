@@ -68,23 +68,7 @@ uv run pytest -m "integration or slow" -v
 just serve
 ```
 
-See the [Contributing Guide](https://python-package-template.readthedocs.io/contributing/) and [Testing Documentation](docs/TESTING.md) for details.
-
-## Test Structure
-
-The test suite is comprehensive with 6 focused test modules covering:
-- Individual option values (edge cases, unicode, derivations)
-- Option combinations (license types, Python versions, examples×actions)
-- GitHub Actions workflows
-- Documentation content
-- Generated project functionality (package installation, tests, linting, docs building)
-- Comprehensive smoke tests that run all nox sessions
-
-Tests use pytest markers for efficient execution:
-- Unit tests run in <5 minutes (default in CI for PRs)
-- Integration tests run on main branch (comprehensive validation including all nox sessions)
-
-See [docs/TESTING.md](docs/TESTING.md) for complete test documentation.
+See the [Contributing Guide](https://python-package-template.readthedocs.io/pages/contributing/) for complete development and testing documentation.
 
 ## License
 
