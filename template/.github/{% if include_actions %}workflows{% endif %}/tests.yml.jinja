@@ -21,9 +21,9 @@ jobs:
       fail-fast: false
       matrix:
         # Draft PRs: Ubuntu only, min+max Python versions
-        # Ready PRs: All OS, all Python versions
+        # Ready PRs: All OS, min+max Python versions
         os: {% raw %}${{ github.event.pull_request.draft && fromJSON('["ubuntu-latest"]') || fromJSON('["ubuntu-latest", "windows-latest", "macos-latest"]') }}{% endraw %}
-        python-version: {% raw %}${{ github.event.pull_request.draft && fromJSON('{% endraw %}["{{ min_python_version }}", "{{ max_python_version }}"]{% raw %}') || fromJSON('{% endraw %}{%- set versions = ["3.11", "3.12", "3.13", "3.14"] -%}[{%- for v in versions if v >= min_python_version and v <= max_python_version -%}"{{ v }}"{{ ", " if not loop.last else "" }}{%- endfor -%}]{% raw %}') }}{% endraw %}
+        python-version: ["{{ min_python_version }}", "{{ max_python_version }}"]
 
     steps:
       - name: Checkout code

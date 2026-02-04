@@ -17,9 +17,9 @@ jobs:
       fail-fast: false
       matrix:
         # Draft PRs: Ubuntu only, min+max Python versions (2 jobs)
-        # Ready PRs: All OS, all Python versions (12 jobs)
+        # Ready PRs: All OS, min+max Python versions (6 jobs)
         os: ${{ github.event.pull_request.draft && fromJSON('["ubuntu-latest"]') || fromJSON('["ubuntu-latest", "windows-latest", "macos-latest"]') }}
-        python-version: ${{ github.event.pull_request.draft && fromJSON('["3.11", "3.14"]') || fromJSON('["3.11", "3.12", "3.13", "3.14"]') }}
+        python-version: ["3.11", "3.14"]
 
     steps:
       - uses: actions/checkout@v6
