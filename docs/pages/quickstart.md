@@ -16,7 +16,23 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uvx copier copy gh:stateful-y/python-package-template my-package
 ```
 
-Answer the prompts about your project (name, author, license, etc.). See [copier.yml](https://github.com/stateful-y/python-package-template/blob/main/copier.yml) for all options.
+Answer the prompts about your project. You'll be asked for:
+
+- `project_name`: Human-readable name (e.g., "My Awesome Package")
+- `package_name`: Python import name with underscores (auto-derived, e.g., "my_awesome_package")
+- `project_slug`: Repository/URL name with hyphens (auto-derived, e.g., "my-awesome-package")
+- `version`: Initial version number (default: "0.1.0")
+- `description`: One-line project description
+- `author_name`: Your name
+- `author_email`: Your email address
+- `github_username`: GitHub username or organization (optional)
+- `license`: Choose from MIT (default), Apache-2.0, BSD-3-Clause, GPL-3.0, or Proprietary
+- `min_python_version`: Minimum Python version (default: 3.11, choices: 3.11-3.14)
+- `max_python_version`: Maximum Python version (default: 3.14, choices: 3.11-3.14)
+- `include_actions`: Include GitHub Actions CI/CD workflows? (default: true)
+- `include_examples`: Include interactive [marimo](https://marimo.io/) notebooks in `examples/`? (default: true)
+
+See [Template Variables](reference.md#template-variables) in the Reference Guide for detailed descriptions.
 
 ## Initialize Your Project
 
@@ -63,14 +79,30 @@ git push -u origin main
 4. In GitHub: Settings → Secrets and variables → Actions → New secret
 5. Add `CODECOV_TOKEN` with your token
 
+**Note**: This token is used by multiple workflows: `tests.yml` (on every push/PR) and `nightly.yml` (daily dependency testing).
+
 ### PyPI Publishing (Automated Releases)
 
-1. Create account at [pypi.org](https://pypi.org/account/register/)
-2. Go to Account settings → API tokens → Add API token
-3. Token name: `my-package`, Scope: Entire account
-4. Copy the token (starts with `pypi-`)
-5. In GitHub: Settings → Secrets and variables → Actions → New secret
-6. Add `PYPI_API_TOKEN` with your token
+**Required secrets** (both needed for automated releases):
+
+1. **PyPI API Token**:
+   - Create account at [pypi.org](https://pypi.org/account/register/)
+   - Go to Account settings → API tokens → Add API token
+   - Token name: `my-package`, Scope: Entire account
+   - Copy the token (starts with `pypi-`)
+   - In GitHub: Settings → Secrets and variables → Actions → New secret
+   - Add `PYPI_API_TOKEN` with your token
+
+2. **GitHub Personal Access Token** (for changelog PR creation):
+   - Go to GitHub Settings → Developer settings → Personal access tokens → Fine-grained tokens
+   - Click "Generate new token"
+   - Configure:
+     - **Token name**: `RELEASE_AUTOMATION_TOKEN`
+     - **Expiration**: 90 days or longer
+     - **Repository access**: Only select repositories → Choose your repository
+     - **Permissions**: Contents (Read/Write), Pull requests (Read/Write), Workflows (Read/Write)
+   - In repository Settings → Secrets and variables → Actions → New secret
+   - Add `RELEASE_AUTOMATION_TOKEN` with your token
 
 Release your package by pushing a version tag:
 
