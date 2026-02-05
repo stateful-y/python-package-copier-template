@@ -1,5 +1,8 @@
 """Nox sessions for {{ project_name }}."""
 
+{% if include_examples %}from pathlib import Path
+{% endif %}
+
 import nox
 
 # Require Nox version 2024.3.2 or newer to support the 'default_venv_backend' option
@@ -170,20 +173,32 @@ def doctest(session: nox.Session) -> None:
 {% if include_examples %}
 
 @nox.session(venv_backend="uv")
-def run_examples(session: nox.Session) -> None:
-    """Run marimo notebook examples to validate they execute."""
-    # Install dependencies
+def test_examples(session: nox.Session) -> None:
+    """Run marimo notebook examples to validate they execute (using pytest)."""
+    # Install dependencies (both tests and examples groups needed)
     session.run_install(
         "uv",
         "sync",
         "--no-default-groups",
         "--group",
+        "tests",
+        "--group",
         "examples",
         env={"UV_PROJECT_ENVIRONMENT": session.virtualenv.location},
     )
 
-    # Run marimo notebooks as scripts (non-interactive execution)
-    session.run("python", "examples/hello.py", *session.posargs)
+    # Run example tests in parallel using pytest with pytest-xdist with no coverage
+    session.run(
+        "pytest",
+        "tests/test_examples.py",
+        "-m",
+        "example",
+        "-n",
+        "auto",
+        "-v",
+        "--no-cov",
+        *session.posargs,
+    )
 {% endif %}
 
 
