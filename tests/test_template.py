@@ -781,8 +781,8 @@ def test_three_tier_documentation_system(copie):
     # Tier 1: Verify embedded marimo setup in examples.md
     examples_md = result.project_dir / "docs" / "pages" / "examples.md"
     examples_content = examples_md.read_text(encoding="utf-8")
-    # Check for either marimo embed directive or inline marimo code
-    has_marimo = "marimo-embed-file" in examples_content or "```python {marimo}" in examples_content
+    # Check for marimo-embed directive with inline code
+    has_marimo = "/// marimo-embed" in examples_content and "@app.cell" in examples_content
     assert has_marimo, "Embedded marimo notebook not found in examples.md"
 
     # Tier 2: Build docs which triggers hooks to export standalone HTML
