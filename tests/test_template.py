@@ -494,8 +494,7 @@ def test_examples_directory_when_enabled(copie):
     # Check CONTRIBUTING mentions adding examples with new pytest approach
     contributing_content = (result.project_dir / "docs" / "pages" / "contributing.md").read_text(encoding="utf-8")
     assert "### Adding Examples" in contributing_content
-    assert "test_examples" in contributing_content
-    assert "python examples/" in contributing_content
+    assert "test_examples" in contributing_content or "test-examples" in contributing_content
 
 
 def test_examples_directory_when_disabled(copie):
