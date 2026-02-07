@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.9.2] - 2026-02-07
+
+This **patch release** includes 2 commits.
+
+
+### Features
+- Add mkdocs hooks support for generated projects  ([#72](https://github.com/stateful-y/python-package-copier/pull/72)) by @gtauzin
+
+### Bug Fixes
+- Remove pre-build dependency from serve commands and fix hooks  ([#70](https://github.com/stateful-y/python-package-copier/pull/70)) by @gtauzin
+
+### Contributors
+
+Thanks to all contributors for this release:
+- @gtauzin
+
 ## [0.9.1] - 2026-02-07
 
 This **patch release** includes 3 commits.
