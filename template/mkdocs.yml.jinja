@@ -87,10 +87,10 @@ markdown_extensions:
 exclude_docs: |
   examples/**/CLAUDE.md
 {% endif %}
+
 validation:
   nav:
-    omitted_files: warn    absolute_links: ignore  # Ignore absolute links - we handle them in hooks
-    unrecognized_links: ignore  # Ignore unrecognized links - examples HTML is generated
+    omitted_files: warn
     not_found: warn
     absolute_links: warn
   links:

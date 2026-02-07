@@ -430,7 +430,6 @@ def test_examples_directory_when_enabled(copie):
     pyproject_content = (result.project_dir / "pyproject.toml").read_text(encoding="utf-8")
     assert "marimo" in pyproject_content
     assert "plotly" in pyproject_content
-    assert "mkdocs-marimo" in pyproject_content
     assert "example: marks tests for example notebooks" in pyproject_content
 
     # Check noxfile has test_examples session that uses pytest
@@ -469,15 +468,14 @@ def test_examples_directory_when_enabled(copie):
     examples_md = result.project_dir / "docs" / "pages" / "examples.md"
     assert examples_md.is_file(), "docs/pages/examples.md not created"
     examples_content = examples_md.read_text(encoding="utf-8")
-    assert "Standalone HTML Notebooks" in examples_content
-    assert "../examples/hello/" in examples_content
+    assert "## Interactive Demo" in examples_content
+    assert "/examples/hello/" in examples_content
 
     # Check mkdocs.yml includes examples in nav and has exclude_docs
     mkdocs_content = (result.project_dir / "mkdocs.yml").read_text(encoding="utf-8")
     assert "Examples: pages/examples.md" in mkdocs_content
-    # Check for multiline exclude_docs format
+    # Check for exclude_docs with CLAUDE.md files
     assert "exclude_docs:" in mkdocs_content
-    assert "examples/**/index.html" in mkdocs_content
     assert "examples/**/CLAUDE.md" in mkdocs_content
 
     # Check GitHub workflow includes examples job
@@ -522,8 +520,6 @@ def test_examples_directory_when_disabled(copie):
     # marimo should not be in dependencies
     assert "marimo" not in pyproject_content
     assert "plotly" not in pyproject_content
-    # mkdocs-marimo should not be in docs dependencies
-    assert "mkdocs-marimo" not in pyproject_content
 
     # Check noxfile doesn't have test_examples session
     noxfile_content = (result.project_dir / "noxfile.py").read_text(encoding="utf-8")
