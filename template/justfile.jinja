@@ -9,33 +9,33 @@ install:
     uv sync --group dev
     uvx pre-commit install
 
-# Run tests
+# Run tests with parallel execution
 test:
-    uv run pytest -v
+    uv run pytest -n auto -v
 
 # Run fast tests (excludes slow and integration tests)
 test-fast:
-    uv run pytest -m "not slow and not integration" -v
+    uv run pytest -m "not slow and not integration" -n auto -v
 
 # Run slow tests (includes integration tests)
 test-slow:
-    uv run pytest -m "slow or integration" -v
+    uv run pytest -m "slow or integration" -n auto -v
 
 # Run tests with coverage
 test-cov:
-    uv run pytest --cov={{ package_name }} --cov-report=html --cov-report=term
+    uv run pytest --cov={{ package_name }} --cov-report=html --cov-report=term -n auto
 
 # Run docstring examples
-doctest:
-    uv run pytest --doctest-modules --doctest-continue-on-failure src/{{ package_name }}
+test-docstrings:
+    uv run pytest --doctest-modules --doctest-continue-on-failure --no-cov src/{{ package_name }}
 {% if include_examples %}
 # Run marimo example notebook interactively
 example file='':
-    uv run marimo edit examples/{{file}}
+    {% raw %}uv run marimo edit examples/{{file}}{% endraw %}
 
 # Test all example notebooks
 test-examples:
-    uv run pytest tests/test_examples.py -m example -n auto -v
+    uv run pytest tests -m example -n auto -v --no-cov
 {% endif %}
 # Run linters and type checkers
 lint:

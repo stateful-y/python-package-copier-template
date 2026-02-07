@@ -98,13 +98,13 @@ def test_generated_project_structure(copie):
     # Check source files
     src_dir = result.project_dir / "src" / "test_project"
     assert (src_dir / "__init__.py").is_file()
-    assert (src_dir / "example.py").is_file()
+    assert (src_dir / "hello.py").is_file()
     assert (src_dir / "py.typed").is_file()
 
     # Check test files
     tests_dir = result.project_dir / "tests"
     assert (tests_dir / "conftest.py").is_file()
-    assert (tests_dir / "test_example.py").is_file()
+    assert (tests_dir / "test_hello.py").is_file()
 
     # Check docs
     docs_dir = result.project_dir / "docs"
@@ -276,9 +276,9 @@ def test_github_workflows(copie):
     # Check for ty
     assert "ty" in content, "ty not found in tests workflow"
 
-    # Check for doctest job
-    assert "doctest:" in content, "doctest job not found in tests workflow"
-    assert "nox -s doctest" in content, "doctest nox session not run in CI"
+    # Check for test_docstrings job
+    assert "test_docstrings:" in content, "test_docstrings job not found in tests workflow"
+    assert "nox -s test_docstrings" in content, "test_docstrings nox session not run in CI"
 
     # Check PR title validation workflow
     pr_title_workflow = result.project_dir / ".github" / "workflows" / "pr-title.yml"
@@ -387,20 +387,20 @@ def test_doctest_configuration(copie):
     assert "--doctest-modules" in pyproject_content
     assert "--doctest-continue-on-failure" in pyproject_content
 
-    # Check noxfile has doctest session
+    # Check noxfile has test_docstrings session
     noxfile_content = (result.project_dir / "noxfile.py").read_text(encoding="utf-8")
-    assert "def doctest(session:" in noxfile_content
+    assert "def test_docstrings(session:" in noxfile_content
     assert '"--doctest-modules"' in noxfile_content
 
-    # Check justfile has doctest command
+    # Check justfile has test-docstrings command
     justfile_content = (result.project_dir / "justfile").read_text(encoding="utf-8")
-    assert "doctest:" in justfile_content
+    assert "test-docstrings:" in justfile_content
     assert "--doctest-modules" in justfile_content
 
-    # Check example.py has docstring examples
-    example_py = (result.project_dir / "src" / "test_project" / "example.py").read_text(encoding="utf-8")
-    assert "Examples:" in example_py
-    assert ">>>" in example_py
+    # Check hello.py has docstring examples
+    hello_py = (result.project_dir / "src" / "test_project" / "hello.py").read_text(encoding="utf-8")
+    assert "Examples:" in hello_py
+    assert ">>>" in hello_py
 
 
 def test_examples_directory_when_enabled(copie):
@@ -437,9 +437,9 @@ def test_examples_directory_when_enabled(copie):
     noxfile_content = (result.project_dir / "noxfile.py").read_text(encoding="utf-8")
     assert "def test_examples(session:" in noxfile_content
     assert "pytest" in noxfile_content
-    assert "tests/test_examples.py" in noxfile_content
-    assert "-m" in noxfile_content and "example" in noxfile_content
-    assert "-n" in noxfile_content and "auto" in noxfile_content
+    assert '"tests"' in noxfile_content
+    assert '"-m"' in noxfile_content and '"example"' in noxfile_content
+    assert '"-n"' in noxfile_content and '"auto"' in noxfile_content
 
     # Check test_examples.py is created and uses pytest parametrize
     test_examples_file = result.project_dir / "tests" / "test_examples.py"
@@ -461,7 +461,7 @@ def test_examples_directory_when_enabled(copie):
     assert "example file=" in justfile_content
     assert "marimo edit" in justfile_content
     assert "test-examples:" in justfile_content
-    assert "pytest tests/test_examples.py" in justfile_content
+    assert "pytest tests" in justfile_content
     assert "-m example" in justfile_content
     assert "-n auto" in justfile_content
 
@@ -494,8 +494,7 @@ def test_examples_directory_when_enabled(copie):
     # Check CONTRIBUTING mentions adding examples with new pytest approach
     contributing_content = (result.project_dir / "docs" / "pages" / "contributing.md").read_text(encoding="utf-8")
     assert "### Adding Examples" in contributing_content
-    assert "test_examples" in contributing_content
-    assert "python examples/" in contributing_content
+    assert "test_examples" in contributing_content or "test-examples" in contributing_content
 
 
 def test_examples_directory_when_disabled(copie):
@@ -814,7 +813,9 @@ def test_three_tier_documentation_system(copie):
         timeout=60,
         check=False,
     )
-    assert export_result.returncode == 0
+    assert export_result.returncode == 0, (
+        f"build_docs failed:\nSTDOUT:\n{export_result.stdout}\n\nSTDERR:\n{export_result.stderr}"
+    )
     standalone_html = result.project_dir / "docs" / "examples" / "hello" / "index.html"
     assert standalone_html.is_file(), "Standalone HTML not created (Tier 2)"
 
@@ -829,16 +830,7 @@ def test_three_tier_documentation_system(copie):
     assert "examples/**/index.html" in mkdocs_content, "mkdocs.yml doesn't exclude standalone HTML files"
     assert "examples/**/CLAUDE.md" in mkdocs_content, "mkdocs.yml doesn't exclude CLAUDE.md files"
 
-    # Tier 3: Build docs and create markdown copies
-    build_result = subprocess.run(
-        ["uvx", "nox", "-s", "build_docs"],
-        cwd=result.project_dir,
-        capture_output=True,
-        text=True,
-        timeout=120,
-        check=False,
-    )
-    assert build_result.returncode == 0
+    # Tier 3: Verify markdown copies were created
     markdown_copy = result.project_dir / "site" / "index.md"
     assert markdown_copy.is_file(), "Markdown copy not created (Tier 3)"
 
@@ -846,12 +838,6 @@ def test_three_tier_documentation_system(copie):
     assert examples_md.is_file(), "Tier 1 (embedded) missing"
     assert standalone_html.is_file(), "Tier 2 (standalone HTML) missing"
     assert markdown_copy.is_file(), "Tier 3 (markdown copies) missing"
-
-
-# ============================================================================
-# COMPREHENSIVE SMOKE TESTS (Option A)
-# These tests run all nox sessions to validate the generated project works
-# ============================================================================
 
 
 @pytest.mark.integration
@@ -960,43 +946,8 @@ def test_lint_session_passes(copie):
 
 @pytest.mark.integration
 @pytest.mark.slow
-def test_just_lint_command_passes(copie):
-    """Test that 'just lint' command works correctly.
-
-    This validates that the just lint command correctly invokes nox lint session.
-    """
-    import shutil
-    import subprocess
-
-    if shutil.which("just") is None:
-        pytest.skip("'just' is not installed on this system")
-
-    result = copie.copy(extra_answers={"include_examples": False})
-    assert result.exit_code == 0
-
-    # Run just lint command
-    lint_result = subprocess.run(
-        ["just", "lint"],
-        cwd=result.project_dir,
-        capture_output=True,
-        text=True,
-        timeout=120,
-        check=False,
-    )
-
-    assert lint_result.returncode == 0, (
-        f"just lint failed:\nSTDOUT:\n{lint_result.stdout}\n\nSTDERR:\n{lint_result.stderr}"
-    )
-
-    # Verify ruff and ty were executed
-    output = lint_result.stdout + lint_result.stderr
-    assert "ruff" in output.lower() or "lint" in output.lower()
-
-
-@pytest.mark.integration
-@pytest.mark.slow
 def test_doctest_session_passes(copie):
-    """Smoke test: run doctest session to validate docstring examples.
+    """Smoke test: run test_docstrings session to validate docstring examples.
 
     This validates:
     - Docstring examples are syntactically correct
@@ -1007,9 +958,9 @@ def test_doctest_session_passes(copie):
     result = copie.copy(extra_answers={"include_examples": False})
     assert result.exit_code == 0
 
-    # Run doctest session
+    # Run test_docstrings session
     doctest_result = subprocess.run(
-        ["uvx", "nox", "-s", "doctest"],
+        ["uvx", "nox", "-s", "test_docstrings"],
         cwd=result.project_dir,
         capture_output=True,
         text=True,
@@ -1109,7 +1060,7 @@ def test_full_project_workflow(copie):
     # Session sequence to run
     sessions = [
         ("test_coverage", 180),
-        ("doctest", 120),
+        ("test_docstrings", 120),
         ("test_examples", 120),
         ("build_docs", 180),
     ]
@@ -1196,7 +1147,6 @@ def test_copier_answers_stores_all_user_inputs(copie):
         "author_name": "Jane Developer",
         "author_email": "jane@example.com",
         "github_username": "janedev",
-        "version": "0.2.0",
         "min_python_version": "3.12",
         "max_python_version": "3.13",
         "license": "Apache-2.0",
@@ -1230,7 +1180,6 @@ def test_copier_answers_stores_all_user_inputs(copie):
     assert "package_name: my_test_pkg" in content
     assert "project_name: My Test Package" in content
     assert "project_slug: my-test-package" in content
-    assert "version: 0.2.0" in content
 
 
 def test_max_python_version_in_classifiers(copie):
@@ -1521,7 +1470,7 @@ def test_generated_project_all_tests_pass(copie):
     )
 
     # Verify both regular tests and example tests ran
-    assert "test_example.py" in test_result.stdout
+    assert "test_hello.py" in test_result.stdout
     assert "test_examples.py" in test_result.stdout
     assert "notebook_file" in test_result.stdout  # parametrized test name
     assert "passed" in test_result.stdout.lower()

@@ -81,6 +81,7 @@ def test_slow(session: nox.Session) -> None:
         "-n",
         "auto",
         "-v",
+        "-v",
         *session.posargs,
     )
 
