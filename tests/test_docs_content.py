@@ -328,7 +328,7 @@ class TestExamplesPage:
         assert "examples/" in content or "iframe" in content.lower()
 
     def test_examples_page_uses_marimo_embed_with_inline_code(self, copie):
-        """Test that examples page uses marimo-embed with inline code instead of marimo-embed-file."""
+        """Test that examples page has interactive demo section with standalone notebook link."""
         result = copie.copy(extra_answers={"include_examples": True})
         assert result.exit_code == 0
 
@@ -337,13 +337,13 @@ class TestExamplesPage:
 
         content = examples_page.read_text(encoding="utf-8")
 
-        # Should use marimo-embed with inline code, not marimo-embed-file
-        assert "/// marimo-embed" in content
-        assert "marimo-embed-file" not in content
-        assert "filepath:" not in content
-        # Should have inline Python code with @app.cell
-        assert "@app.cell" in content
-        assert "import marimo as mo" in content
+        # Should have Interactive Demo section with standalone notebook link
+        assert "## Interactive Demo" in content
+        assert "/examples/hello/" in content
+        assert "WebAssembly" in content
+        # Should have Running Examples Locally section
+        assert "## Running Examples Locally" in content
+        assert "just example" in content
 
 
 class TestMkdocsConfiguration:
@@ -467,7 +467,7 @@ class TestMkdocsConfiguration:
         assert "search" in plugins_str
 
     def test_mkdocs_yml_includes_marimo_plugin_when_examples_enabled(self, copie):
-        """Test that mkdocs.yml includes marimo plugin when examples enabled."""
+        """Test that mkdocs.yml does not include marimo plugin (marimo embed is used instead)."""
         result = copie.copy(extra_answers={"include_examples": True})
         assert result.exit_code == 0
 
@@ -477,8 +477,8 @@ class TestMkdocsConfiguration:
         plugins = mkdocs_data.get("plugins", [])
         plugins_str = str(plugins).lower()
 
-        # Should include marimo plugin
-        assert "marimo" in plugins_str
+        # marimo plugin is not used - we use marimo-embed directive instead
+        assert "marimo" not in plugins_str
 
     def test_mkdocs_yml_excludes_marimo_plugin_when_examples_disabled(self, copie):
         """Test that mkdocs.yml excludes marimo plugin when examples disabled."""

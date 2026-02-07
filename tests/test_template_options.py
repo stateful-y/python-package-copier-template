@@ -58,13 +58,9 @@ def test_option_combinations(copie, include_examples, include_actions):
     if include_examples:
         assert "marimo" in pyproject_content, "marimo should be in dependencies when include_examples=True"
         assert "plotly" in pyproject_content, "plotly should be in dependencies when include_examples=True"
-        assert "mkdocs-marimo" in pyproject_content, "mkdocs-marimo should be in docs deps when include_examples=True"
     else:
         assert "marimo" not in pyproject_content, "marimo should not be in dependencies when include_examples=False"
         assert "plotly" not in pyproject_content, "plotly should not be in dependencies when include_examples=False"
-        assert "mkdocs-marimo" not in pyproject_content, (
-            "mkdocs-marimo should not be in docs deps when include_examples=False"
-        )
 
     # Test noxfile sessions
     noxfile_content = (result.project_dir / "noxfile.py").read_text(encoding="utf-8")
